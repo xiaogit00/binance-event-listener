@@ -1,0 +1,131 @@
+//NEW Market Order
+{
+    "e": "TRADE_LITE",
+    "E": 1749013292798,
+    "T": 1749013292798,
+    "s": "SOLUSDT",
+    "q": "0.09",
+    "p": "0.0000",
+    "m": False,
+    "c": "fOPYqvypuFM2LKJ3ihzKFZ",
+    "S": "BUY",
+    "L": "156.5000",
+    "l": "0.09",
+    "t": 2369436085,
+    "i": 121058809222
+}
+//MARKET ORDER UPDATE
+{
+    "e": "ORDER_TRADE_UPDATE",
+    "T": 1749013292798,
+    "E": 1749013292798,
+    "o": {
+        "s": "SOLUSDT",
+        "c": "fOPYqvypuFM2LKJ3ihzKFZ",
+        "S": "BUY",
+        "o": "MARKET",
+        "f": "GTC",
+        "q": "0.09",
+        "p": "0",
+        "ap": "0",
+        "sp": "0",
+        "x": "NEW",
+        "X": "NEW",
+        "i": 121058809222,
+        "l": "0",
+        "z": "0",
+        "L": "0",
+        "n": "0",
+        "N": "USDT",
+        "T": 1749013292798,
+        "t": 0,
+        "b": "0",
+        "a": "0",
+        "m": False,
+        "R": False,
+        "wt": "CONTRACT_PRICE",
+        "ot": "MARKET",
+        "ps": "BOTH",
+        "cp": False,
+        "rp": "0",
+        "pP": False,
+        "si": 0,
+        "ss": 0,
+        "V": "EXPIRE_MAKER",
+        "pm": "NONE",
+        "gtd": 0
+    }
+}
+// NEW ACCOUNT UPDATE
+{
+    "e": "ACCOUNT_UPDATE",
+    "T": 1749013292798,
+    "E": 1749013292798,
+    "a": { // update data
+        "B": [ // Balances
+            {
+                "a": "USDT", // asset
+                "wb": "0.21843288", // wallet balance
+                "cw": "0.21843288", // Cross wallet balance
+                "bc": "0" // Balance change except PnL and Commission
+            }
+        ],
+        "P": [ // Positions
+            {
+                "s": "SOLUSDT", // Asset Symbol 
+                "pa": "0.09", // Position Amount
+                "ep": "156.5", // Entry Price
+                "cr": "0.35020001", //Accumulated Realized
+                "up": "-0.00824514", // Unrealized PnL
+                "mt": "cross",
+                "iw": "0",
+                "ps": "BOTH",
+                "ma": "USDT",
+                "bep": "156.57825" // Breakeven price 
+            }
+        ],
+        "m": "ORDER" // Event reason (what triggers it)
+    }
+}
+//ORDER FILLED
+{
+    "e": "ORDER_TRADE_UPDATE",
+    "T": 1749013292798,
+    "E": 1749013292798,
+    "o": {
+        "s": "SOLUSDT",
+        "c": "fOPYqvypuFM2LKJ3ihzKFZ",
+        "S": "BUY",
+        "o": "MARKET",
+        "f": "GTC",
+        "q": "0.09",
+        "p": "0",
+        "ap": "156.5",
+        "sp": "0",
+        "x": "TRADE",
+        "X": "FILLED",
+        "i": 121058809222,
+        "l": "0.09",
+        "z": "0.09",
+        "L": "156.5",
+        "n": "0.0070425",
+        "N": "USDT",
+        "T": 1749013292798,
+        "t": 2369436085,
+        "b": "0",
+        "a": "0",
+        "m": False,
+        "R": False,
+        "wt": "CONTRACT_PRICE",
+        "ot": "MARKET",
+        "ps": "BOTH",
+        "cp": False,
+        "rp": "0",
+        "pP": False,
+        "si": 0,
+        "ss": 0,
+        "V": "EXPIRE_MAKER",
+        "pm": "NONE",
+        "gtd": 0
+    }
+}

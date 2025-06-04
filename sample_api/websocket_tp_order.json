@@ -1,0 +1,157 @@
+// NEW TP Order at 155.99
+{
+    "e": "ORDER_TRADE_UPDATE",
+    "T": 1749037242198,
+    "E": 1749037242198,
+    "o": {
+        "s": "SOLUSDT",
+        "c": "g4MptWkQzp3uWetiZUUUJj",
+        "S": "SELL",
+        "o": "TAKE_PROFIT",
+        "f": "GTC",
+        "q": "0.09",
+        "p": "155.97",
+        "ap": "0",
+        "sp": "155.99",
+        "x": "NEW",
+        "X": "NEW",
+        "i": 121112161969,
+        "l": "0",
+        "z": "0",
+        "L": "0",
+        "n": "0",
+        "N": "USDT",
+        "T": 1749037242198,
+        "t": 0,
+        "b": "0",
+        "a": "0",
+        "m": False,
+        "R": False,
+        "wt": "CONTRACT_PRICE",
+        "ot": "TAKE_PROFIT",
+        "ps": "BOTH",
+        "cp": False,
+        "rp": "0",
+        "pP": False,
+        "si": 0,
+        "ss": 0,
+        "V": "EXPIRE_MAKER",
+        "pm": "NONE",
+        "gtd": 0
+    }
+}
+//ACCOUNT_UPDATE when fulfilling TP order
+{
+    "e": "ACCOUNT_UPDATE",
+    "T": 1749037660067,
+    "E": 1749037660067,
+    "a": {
+        "B": [
+            {
+                "a": "USDT",
+                "wb": "0.1512254",
+                "cw": "0.1512254",
+                "bc": "0"
+            }
+        ],
+        "P": [
+            {
+                "s": "SOLUSDT",
+                "pa": "0", // Position Amount
+                "ep": "0",
+                "cr": "0.33220003",
+                "up": "0",
+                "mt": "cross",
+                "iw": "0",
+                "ps": "BOTH",
+                "ma": "USDT",
+                "bep": "0"
+            }
+        ],
+        "m": "ORDER"
+    }
+}
+//Fulfilling TP Order at 156.10
+{
+    "e": "ORDER_TRADE_UPDATE",
+    "T": 1749037660067,
+    "E": 1749037660067,
+    "o": {
+        "s": "SOLUSDT",
+        "c": "is1xLHwqi0DtVF3IPTGYKS",
+        "S": "SELL",
+        "o": "LIMIT",
+        "f": "GTC",
+        "q": "0.09", // Original Qty
+        "p": "156.08", // Original Price -.02 because of my settings -> I am looking for this order filled
+        "ap": "156.09", //Average price
+        "sp": "156.1", // Limit price
+        "x": "TRADE",
+        "X": "FILLED",
+        "i": 121113028066,
+        "l": "0.09",
+        "z": "0.09",
+        "L": "156.09",
+        "n": "0.00702405",
+        "N": "USDT",
+        "T": 1749037660067,
+        "t": 2369857805,
+        "b": "0",
+        "a": "0",
+        "m": False,
+        "R": False,
+        "wt": "CONTRACT_PRICE",
+        "ot": "TAKE_PROFIT",
+        "ps": "BOTH",
+        "cp": False,
+        "rp": "0.0081",
+        "pP": False,
+        "si": 0,
+        "ss": 0,
+        "V": "EXPIRE_MAKER",
+        "pm": "NONE",
+        "gtd": 0
+    }
+}
+// Cancelled TP:
+{
+    "e": "ORDER_TRADE_UPDATE",
+    "T": 1749037542410,
+    "E": 1749037542410,
+    "o": {
+        "s": "SOLUSDT",
+        "c": "g4MptWkQzp3uWetiZUUUJj",
+        "S": "SELL",
+        "o": "TAKE_PROFIT",
+        "f": "GTC",
+        "q": "0.09",
+        "p": "155.97",
+        "ap": "0",
+        "sp": "155.99",
+        "x": "CANCELED",
+        "X": "CANCELED",
+        "i": 121112161969,
+        "l": "0",
+        "z": "0",
+        "L": "0",
+        "n": "0",
+        "N": "USDT",
+        "T": 1749037542410,
+        "t": 0,
+        "b": "0",
+        "a": "0",
+        "m": False,
+        "R": False,
+        "wt": "CONTRACT_PRICE",
+        "ot": "TAKE_PROFIT",
+        "ps": "BOTH",
+        "cp": False,
+        "rp": "0",
+        "pP": False,
+        "si": 0,
+        "ss": 0,
+        "V": "EXPIRE_MAKER",
+        "pm": "NONE",
+        "gtd": 0
+    }
+}

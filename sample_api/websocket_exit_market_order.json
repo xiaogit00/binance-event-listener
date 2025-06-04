@@ -1,0 +1,131 @@
+//CLOSING POSITION
+{
+    "e": "TRADE_LITE",
+    "E": 1749014238719,
+    "T": 1749014238719,
+    "s": "SOLUSDT",
+    "q": "0.09",
+    "p": "0.0000",
+    "m": False,
+    "c": "android_XHG6oEwUNwQORP4VHbm8",
+    "S": "SELL",
+    "L": "156.5700",
+    "l": "0.09",
+    "t": 2369457042,
+    "i": 121061375694
+}
+// CLOSE POSITION TRADE ORDER UPDATE
+{
+    "e": "ORDER_TRADE_UPDATE",
+    "T": 1749014238719,
+    "E": 1749014238719,
+    "o": {
+        "s": "SOLUSDT",
+        "c": "android_XHG6oEwUNwQORP4VHbm8",
+        "S": "SELL",
+        "o": "MARKET",
+        "f": "GTC",
+        "q": "0.09",
+        "p": "0",
+        "ap": "0",
+        "sp": "0",
+        "x": "NEW",
+        "X": "NEW",
+        "i": 121061375694,
+        "l": "0",
+        "z": "0",
+        "L": "0",
+        "n": "0",
+        "N": "USDT",
+        "T": 1749014238719,
+        "t": 0,
+        "b": "0",
+        "a": "0",
+        "m": False,
+        "R": True,
+        "wt": "CONTRACT_PRICE",
+        "ot": "MARKET",
+        "ps": "BOTH",
+        "cp": False,
+        "rp": "0",
+        "pP": False,
+        "si": 0,
+        "ss": 0,
+        "V": "EXPIRE_MAKER",
+        "pm": "NONE",
+        "gtd": 0
+    }
+}
+//ACCOUNT UPDATE
+{
+    "e": "ACCOUNT_UPDATE",
+    "T": 1749014238719,
+    "E": 1749014238719,
+    "a": {
+        "B": [
+            {
+                "a": "USDT",
+                "wb": "0.17479504",
+                "cw": "0.17479504",
+                "bc": "0"
+            }
+        ],
+        "P": [
+            {
+                "s": "SOLUSDT",
+                "pa": "0",
+                "ep": "0",
+                "cr": "0.32770002",
+                "up": "0",
+                "mt": "cross",
+                "iw": "0",
+                "ps": "BOTH",
+                "ma": "USDT",
+                "bep": "0"
+            }
+        ],
+        "m": "ORDER"
+    }
+}
+//POSITION FILLED
+{
+    "e": "ORDER_TRADE_UPDATE",
+    "T": 1749014238719,
+    "E": 1749014238719,
+    "o": {
+        "s": "SOLUSDT",
+        "c": "android_XHG6oEwUNwQORP4VHbm8",
+        "S": "SELL",
+        "o": "MARKET",
+        "f": "GTC",
+        "q": "0.09",
+        "p": "0",
+        "ap": "156.57",
+        "sp": "0",
+        "x": "TRADE",
+        "X": "FILLED",
+        "i": 121061375694,
+        "l": "0.09",
+        "z": "0.09",
+        "L": "156.57",
+        "n": "0.00704565",
+        "N": "USDT",
+        "T": 1749014238719,
+        "t": 2369457042,
+        "b": "0",
+        "a": "0",
+        "m": False,
+        "R": True,
+        "wt": "CONTRACT_PRICE",
+        "ot": "MARKET",
+        "ps": "BOTH",
+        "cp": False,
+        "rp": "-0.0153",
+        "pP": False,
+        "si": 0,
+        "ss": 0,
+        "V": "EXPIRE_MAKER",
+        "pm": "NONE",
+        "gtd": 0
+    }
+}
