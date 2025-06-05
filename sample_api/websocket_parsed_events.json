@@ -1,0 +1,12 @@
+// NEW MARKET ORDER
+{
+    "order_id": 121058809222,
+    "group_id": "fOPYqvypuFM2LKJ3ihzKFZ",
+    "status": "NEW",
+    "symbol": "SOLUSDT",
+    "side": "BUY",
+    "type": "MARKET",
+    "qty": "0.09",
+    "direction": "LONG",
+    "created_at": 1749013292798
+}

@@ -1,0 +1,55 @@
+def newMarketOrder():
+    return {
+    "e": "ORDER_TRADE_UPDATE",
+    "T": 1749013292798,
+    "E": 1749013292798,
+    "o": {
+        "s": "SOLUSDT",
+        "c": "fOPYqvypuFM2LKJ3ihzKFZ",
+        "S": "BUY",
+        "o": "MARKET",
+        "f": "GTC",
+        "q": "0.09",
+        "p": "0",
+        "ap": "0",
+        "sp": "0",
+        "x": "NEW",
+        "X": "NEW",
+        "i": 121058809222,
+        "l": "0",
+        "z": "0",
+        "L": "0",
+        "n": "0",
+        "N": "USDT",
+        "T": 1749013292798,
+        "t": 0,
+        "b": "0",
+        "a": "0",
+        "m": False,
+        "R": False,
+        "wt": "CONTRACT_PRICE",
+        "ot": "MARKET",
+        "ps": "BOTH",
+        "cp": False,
+        "rp": "0",
+        "pP": False,
+        "si": 0,
+        "ss": 0,
+        "V": "EXPIRE_MAKER",
+        "pm": "NONE",
+        "gtd": 0
+    }
+}
+
+def newParsedMarketOrder():
+    return {
+    "order_id": 121058809222,
+    "group_id": "3",
+    "status": "NEW",
+    "symbol": "SOLUSDT",
+    "side": "BUY",
+    "type": "MARKET",
+    "qty": "0.09",
+    "direction": "LONG",
+    "created_at": 1749013292798
+}

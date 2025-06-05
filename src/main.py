@@ -3,6 +3,7 @@ from src.services import binanceWebsocket
 import src.event_handler as EventHandler
 from src.utils.logger import init_logger
 import event_handler as EventHandler
+from src.services import db
 
 async def main():
     init_logger()
@@ -16,12 +17,13 @@ async def main():
 
         if event_type != "ORDER_TRADE_UPDATE": # Ignoring all other event types
             continue
+
         parsed_event = EventHandler.event_parser(new_binance_event)
 
         if parsed_event['status'] == "CANCELED": # UPDATE CANCELLED FIRST
             db.findByIdAndCancel(parsed_event['order_id'], parsed_event) # TO-DO
         if parsed_event['status'] == "NEW": # New Market Order
-            db.insertNewOrderByType(parsed_event["type"] ,parsed_event) # TO-DO
+            db.insertNewOrderByType(parsed_event["type"] ,parsed_event) 
         if parsed_event['type'] == "MARKET" and parsed_event['status'] == "FILLED":
             db.findByIdAndUpdateFilledMarketOrder(parsed_event['order_id'], parsed_event) # TO-DO
         if parsed_event['type'] != "MARKET" and parsed_event['status'] == "FILLED":
