@@ -21,13 +21,13 @@ async def main():
         parsed_event = EventHandler.event_parser(new_binance_event)
 
         if parsed_event['status'] == "CANCELED": # UPDATE CANCELLED FIRST
-            db.findByIdAndCancel(parsed_event['order_id'], parsed_event) # TO-DO
-        if parsed_event['status'] == "NEW": # New Market Order
+            db.findByIdAndCancel(parsed_event['order_id'], parsed_event) 
+        elif parsed_event['status'] == "NEW": # New Order
             db.insertNewOrderByType(parsed_event["type"] ,parsed_event) 
-        if parsed_event['type'] == "MARKET" and parsed_event['status'] == "FILLED":
-            db.findByIdAndUpdateFilledMarketOrder(parsed_event['order_id'], parsed_event) # TO-DO
-        if parsed_event['type'] != "MARKET" and parsed_event['status'] == "FILLED":
-            db.findByIdAndUpdateFilledSLTPOrder(parsed_event['order_id'], parsed_event) # TO-DO
+        elif parsed_event['type'] == "MARKET" and parsed_event['status'] == "FILLED":
+            db.findByIdAndUpdateFilledMarketOrder(parsed_event['order_id'], parsed_event)
+        elif parsed_event['type'] != "MARKET" and parsed_event['status'] == "FILLED":
+            db.findByIdAndUpdateFilledSLTPOrder(parsed_event['order_id'], parsed_event) 
 
 
 

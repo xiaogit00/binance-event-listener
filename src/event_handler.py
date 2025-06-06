@@ -12,9 +12,9 @@ def event_parser(new_binance_event) -> dict:
         }
         if parsed_event['type'] == "MARKET":
             parsed_event['direction'] = "LONG" if parsed_event['side'] == "BUY" else "SHORT"
-        elif type == "TAKE_PROFIT":
+        elif parsed_event['type'] == "TAKE_PROFIT":
             parsed_event['direction'] = "LONG" if parsed_event['side'] == "SELL" else "SHORT"
-        elif type == "STOP_MARKET":
+        elif parsed_event['type'] == "STOP_MARKET":
             parsed_event['direction'] = "LONG" if parsed_event['side'] == "SELL" else "SHORT"
         
         if parsed_event['status'] == "NEW":
@@ -28,7 +28,7 @@ def event_parser(new_binance_event) -> dict:
         elif parsed_event['type'] != "MARKET" and parsed_event['status'] == "NEW":
             parsed_event['ask_price'] = new_binance_event["o"]["sp"]
         
-        if parsed_event['status'] == "FILLED":
+        if parsed_event['status'] == "FILLED" or parsed_event['status'] == "CANCELED":
             parsed_event['updated_at'] = new_binance_event["T"]
         
         logging.info(f"Successfully parsed event, returning: {parsed_event}")

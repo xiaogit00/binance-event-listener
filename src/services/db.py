@@ -8,6 +8,18 @@ from datetime import datetime
 
 load_dotenv()
 
+def get_one_order(order_id):
+    """Gets one order"""
+    conn = get_connection()
+    try:
+        with conn.cursor() as cur:
+            cur.execute("SELECT * FROM orders WHERE order_id=%s;", [order_id])
+            db_res = cur.fetchall()
+            if len(db_res):
+                print("THERE IS AN ORDER ID EXISTING")
+            return db_res
+    finally:
+        conn.close()
 
 def get_orders():
     """Get all orders"""
@@ -16,6 +28,16 @@ def get_orders():
         with conn.cursor() as cur:
             cur.execute("SELECT * FROM orders;")
             return cur.fetchall()
+    finally:
+        conn.close()
+
+def delete_orders():
+    """Get all orders"""
+    conn = get_connection()
+    try:
+        with conn.cursor() as cur:
+            cur.execute("DELETE FROM orders;")
+            conn.commit()
     finally:
         conn.close()
 
@@ -34,22 +56,41 @@ def insertNewOrderByType(order_type, order_data):
         "direction": "LONG",
         "created_at": 1749013292798
         }
+    order_data (SL):
+        {
+            "order_id": 121112646034,
+            "group_id": "3",
+            "status": "NEW",
+            "symbol": "SOLUSDT",
+            "side": "SELL",
+            "type": "STOP_MARKET",
+            "qty": "0", # FOR SL, qty will be 0, as by default im set for "closePosition to be True "
+            "direction": "LONG",
+            "created_at": 1749037471697,
+            "ask_price": "155.7"
+        }
     '''
     conn = get_connection()
     try:
         with conn.cursor() as cur:
+            cur.execute("SELECT * FROM orders WHERE order_id=%s;", [order_data['order_id']])
+            db_res = cur.fetchall()
+            if len(db_res):
+                logging.info(f"Existing order ID found for {order_data['order_id']}, skipping adding 'NEW' order to DB.")
+                return
             cur.execute("""
-                INSERT INTO orders (order_id, group_id, direction, symbol, order_type, ask_price, filled_price, side, created_at, updated_at)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                INSERT INTO orders (order_id, status, group_id, direction, symbol, order_type, ask_price, filled_price, side, created_at, updated_at)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 RETURNING *;
             """, (
                 order_data["order_id"],
+                order_data["status"],
                 order_data["group_id"],
                 order_data["direction"],
                 order_data["symbol"],
                 order_data["type"],
-                None,
-                None,
+                None if order_data["type"] == "MARKET" else order_data["ask_price"], # Ask Price is none
+                None, # Filled Price Price is none
                 order_data["side"],
                 datetime.fromtimestamp(order_data["created_at"]/1000),
                 None
@@ -61,6 +102,107 @@ def insertNewOrderByType(order_type, order_data):
     finally:
         conn.close()
         
+def findByIdAndUpdateFilledMarketOrder(order_id, order_data):
+    logging.info(f"Attempting to UPDATE order {order_id} to FILLED")
+    '''
+        {
+        "order_id": 121058809222,
+        "group_id": "3",
+        "status": "FILLED",
+        "symbol": "SOLUSDT",
+        "side": "BUY",
+        "type": "MARKET",
+        "qty": "0.09",
+        "direction": "LONG",
+        "ask_price": "156.5",
+        "filled_price": "156.5",
+        "updated_at": 1749013292798
+        }
+    '''
+    conn = get_connection()
+    try:
+        with conn.cursor() as cur:
+            cur.execute("""
+                            UPDATE orders
+                            SET status = %s, ask_price = %s, filled_price = %s, updated_at = %s
+                            WHERE order_id = %s
+                            RETURNING *;
+                        """, (
+                order_data['status'], 
+                order_data['ask_price'],
+                order_data['filled_price'],
+                datetime.fromtimestamp(order_data["updated_at"]/1000),
+                order_data['order_id'],
+            ))
+            new_order = cur.fetchone()
+            conn.commit()
+            logging.info(f"Successfully updated Market Order {order_data['order_id']} with FILLED info: {new_order}")
+            return new_order
+    finally:
+        conn.close()
+
+def findByIdAndUpdateFilledSLTPOrder(order_id, order_data):
+    logging.info(f"Attempting to UPDATE order {order_id} to FILLED")
+    '''
+        {
+            "order_id": 121115517313,
+            "group_id": "3",
+            "status": "FILLED",
+            "symbol": "SOLUSDT",
+            "side": "SELL",
+            "type": "STOP_MARKET",
+            "qty": "0.09",
+            "direction": "LONG",
+            "filled_price": "156.02",
+            "updated_at": 1749038674248
+}
+    '''
+    conn = get_connection()
+    try:
+        with conn.cursor() as cur:
+            cur.execute("""
+                            UPDATE orders
+                            SET status = %s, filled_price = %s, updated_at = %s
+                            WHERE order_id = %s
+                            RETURNING *;
+                        """, (
+                order_data['status'],
+                order_data['filled_price'],
+                datetime.fromtimestamp(order_data["updated_at"]/1000),
+                order_id,
+            ))
+            new_order = cur.fetchone()
+            conn.commit()
+            logging.info(f"Successfully updated Market Order {order_id} with FILLED info: {new_order}")
+            return new_order
+    finally:
+        conn.close()
+
+def findByIdAndCancel(order_id, order_data):
+    '''
+    Updates the status of the order to be cancelled
+    '''
+    logging.info(f"Attempting to UPDATE order {order_id} to CANCELED")
+    conn = get_connection()
+    try:
+        with conn.cursor() as cur:
+            cur.execute("""
+                            UPDATE orders
+                            SET status = %s, updated_at = %s
+                            WHERE order_id = %s
+                            RETURNING *;
+                        """, (
+                order_data['status'],
+                datetime.fromtimestamp(order_data["updated_at"]/1000),
+                order_id,
+            ))
+            new_order = cur.fetchone()
+            conn.commit()
+            logging.info(f"Successfully updated Market Order {order_id} to cancelled {new_order}")
+            return new_order
+    finally:
+        conn.close()
+
 
 def add_new_order(res, group_id, ask_price):
     """Inserts a new order in orders table."""

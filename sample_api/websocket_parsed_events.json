@@ -10,3 +10,54 @@
     "direction": "LONG",
     "created_at": 1749013292798
 }
+// NEW FILLED MARKET ORDER
+{
+    "order_id": 121058809222,
+    "group_id": "fOPYqvypuFM2LKJ3ihzKFZ",
+    "status": "FILLED",
+    "symbol": "SOLUSDT",
+    "side": "BUY",
+    "type": "MARKET",
+    "qty": "0.09",
+    "direction": "LONG",
+    "ask_price": "156.5",
+    "filled_price": "156.5",
+    "updated_at": 1749013292798
+}
+// NEW SL ORDER
+{
+    "order_id": 121112646034,
+    "group_id": "yLnj0FPCHLvMOMmr0LpukC",
+    "status": "NEW",
+    "symbol": "SOLUSDT",
+    "side": "SELL",
+    "type": "STOP_MARKET",
+    "qty": "0",
+    "created_at": 1749037471697,
+    "ask_price": "155.7"
+}
+// NEW FILLED SL Order
+{
+    "order_id": 121115517313,
+    "group_id": "3",
+    "status": "FILLED",
+    "symbol": "SOLUSDT",
+    "side": "SELL",
+    "type": "STOP_MARKET",
+    "qty": "0.09",
+    "direction": "LONG",
+    "filled_price": "156.02",
+    "updated_at": 1749038674248
+}
+/// NEW parsed Cancel order
+{
+    "order_id": 121046588788,
+    "group_id": "3",
+    "status": "CANCELED",
+    "symbol": "SOLUSDT",
+    "side": "SELL",
+    "type": "STOP_MARKET",
+    "qty": "0",
+    "direction": "LONG",
+    "updated_at": 1749008243657
+}

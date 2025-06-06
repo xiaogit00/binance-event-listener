@@ -1,20 +1,35 @@
 import logging 
-
+class FileFuncFormatter(logging.Formatter):
+    def format(self, record):
+        combined = f"{record.filename}::{record.funcName}()"
+        record.filefunc = f"{combined:<37}"  # Left-align in 35-char field
+        return super().format(record)
+    
 def init_logger():
-    logging.basicConfig(
-        filename='bot.log',  # Log file name
-        filemode='a',        # Append mode
-        format='%(asctime)s - %(levelname)s - %(filename)s - %(funcName)s | %(message)s',
-        datefmt='%Y-%m-%d %H:%M:%S',
-        level=logging.INFO   # Minimum level to capture
+    log_format = (
+        '{asctime} | {levelname:<6} | {filefunc} | {message}'
     )
 
-    # Add console logging too
+    # Use the custom formatter
+    formatter = FileFuncFormatter(
+        log_format,
+        style='{',
+        datefmt='%Y-%m-%d %H:%M:%S'
+    )
+
+    # File handler
+    file_handler = logging.FileHandler('bot.log', mode='a')
+    file_handler.setFormatter(formatter)
+    file_handler.setLevel(logging.INFO)
+
+    # Console handler
     console = logging.StreamHandler()
-    console.setLevel(logging.INFO)
-    formatter = logging.Formatter(
-    '%(asctime)s - %(levelname)s - %(filename)s - %(funcName)s | %(message)s',
-    datefmt='%Y-%m-%d %H:%M:%S'
-)
     console.setFormatter(formatter)
-    logging.getLogger('').addHandler(console)
+    console.setLevel(logging.INFO)
+
+    # Configure root logger
+    root_logger = logging.getLogger()
+    root_logger.setLevel(logging.INFO)
+    root_logger.handlers = []  # Clear existing handlers
+    root_logger.addHandler(file_handler)
+    root_logger.addHandler(console)

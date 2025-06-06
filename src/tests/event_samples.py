@@ -41,6 +41,49 @@ def newMarketOrder():
     }
 }
 
+def newFilledMarketOrder():
+    return {
+    "e": "ORDER_TRADE_UPDATE",
+    "T": 1749013292798,
+    "E": 1749013292798,
+    "o": {
+        "s": "SOLUSDT",
+        "c": "3",
+        "S": "BUY",
+        "o": "MARKET",
+        "f": "GTC",
+        "q": "0.09",
+        "p": "0",
+        "ap": "156.5",
+        "sp": "0",
+        "x": "TRADE",
+        "X": "FILLED",
+        "i": 121058809222,
+        "l": "0.09",
+        "z": "0.09",
+        "L": "156.5",
+        "n": "0.0070425",
+        "N": "USDT",
+        "T": 1749013292798,
+        "t": 2369436085,
+        "b": "0",
+        "a": "0",
+        "m": False,
+        "R": False,
+        "wt": "CONTRACT_PRICE",
+        "ot": "MARKET",
+        "ps": "BOTH",
+        "cp": False,
+        "rp": "0",
+        "pP": False,
+        "si": 0,
+        "ss": 0,
+        "V": "EXPIRE_MAKER",
+        "pm": "NONE",
+        "gtd": 0
+    }
+}
+
 def newParsedMarketOrder():
     return {
     "order_id": 121058809222,
@@ -52,4 +95,189 @@ def newParsedMarketOrder():
     "qty": "0.09",
     "direction": "LONG",
     "created_at": 1749013292798
+}
+
+def newParsedFilledMarketOrder():
+    return {
+    "order_id": 121058809222,
+    "group_id": "3",
+    "status": "FILLED",
+    "symbol": "SOLUSDT",
+    "side": "BUY",
+    "type": "MARKET",
+    "qty": "0.09",
+    "direction": "LONG",
+    "ask_price": "156.5",
+    "filled_price": "156.5",
+    "updated_at": 1749013292798
+}
+
+def newSLOrder():
+    return {
+    "e": "ORDER_TRADE_UPDATE",
+    "T": 1749037471697,
+    "E": 1749037471697,
+    "o": {
+        "s": "SOLUSDT",
+        "c": "3",
+        "S": "SELL",
+        "o": "STOP_MARKET",
+        "f": "GTC",
+        "q": "0",
+        "p": "0",
+        "ap": "0",
+        "sp": "155.7",
+        "x": "NEW",
+        "X": "NEW",
+        "i": 121112646034,
+        "l": "0",
+        "z": "0",
+        "L": "0",
+        "n": "0",
+        "N": "USDT",
+        "T": 1749037471697,
+        "t": 0,
+        "b": "0",
+        "a": "0",
+        "m": False,
+        "R": True,
+        "wt": "CONTRACT_PRICE",
+        "ot": "STOP_MARKET",
+        "ps": "BOTH",
+        "cp": True,
+        "rp": "0",
+        "pP": False,
+        "si": 0,
+        "ss": 0,
+        "V": "EXPIRE_MAKER",
+        "pm": "NONE",
+        "gtd": 0
+    }
+}
+
+def newParsedSLOrder():
+    return {
+    "order_id": 121112646034,
+    "group_id": "3",
+    "status": "NEW",
+    "symbol": "SOLUSDT",
+    "side": "SELL",
+    "type": "STOP_MARKET",
+    "qty": "0", # FOR SL, qty will be 0, as by default im set for "closePosition to be True "
+    "direction": "LONG",
+    "created_at": 1749037471697,
+    "ask_price": "155.7"
+}
+
+def newFilledSLOrder():
+    return {
+    "e": "ORDER_TRADE_UPDATE",
+    "T": 1749038674248,
+    "E": 1749038674248,
+    "o": {
+        "s": "SOLUSDT",
+        "c": "3",
+        "S": "SELL",
+        "o": "MARKET",
+        "f": "GTC",
+        "q": "0.09",
+        "p": "0",
+        "ap": "156.02",
+        "sp": "156.02",
+        "x": "TRADE",
+        "X": "FILLED",
+        "i": 121115517313,
+        "l": "0.09",
+        "z": "0.09",
+        "L": "156.02",
+        "n": "0.0070209",
+        "N": "USDT",
+        "T": 1749038674248,
+        "t": 2369877422,
+        "b": "0",
+        "a": "0",
+        "m": False,
+        "R": True,
+        "wt": "CONTRACT_PRICE",
+        "ot": "STOP_MARKET",
+        "ps": "BOTH",
+        "cp": True,
+        "rp": "-0.00359999",
+        "pP": False,
+        "si": 0,
+        "ss": 0,
+        "V": "EXPIRE_MAKER",
+        "pm": "NONE",
+        "gtd": 0
+    }
+}
+
+def newParsedFilledSLOrder():
+    return {
+    "order_id": 121112646034,
+    "group_id": "3",
+    "status": "FILLED",
+    "symbol": "SOLUSDT",
+    "side": "SELL",
+    "type": "STOP_MARKET",
+    "qty": "0.09",
+    "direction": "LONG",
+    "filled_price": "156.02",
+    "updated_at": 1749038674248
+}
+
+def newCancelOrder():
+    return {
+    "e": "ORDER_TRADE_UPDATE",
+    "T": 1749008243657,
+    "E": 1749008243657,
+    "o": {
+        "s": "SOLUSDT",
+        "c": "3",
+        "S": "SELL",
+        "o": "STOP_MARKET",
+        "f": "GTC",
+        "q": "0",
+        "p": "0",
+        "ap": "0",
+        "sp": "4",
+        "x": "CANCELED",
+        "X": "CANCELED",
+        "i": 121046588788,
+        "l": "0",
+        "z": "0",
+        "L": "0",
+        "n": "0",
+        "N": "USDT",
+        "T": 1749008243657,
+        "t": 0,
+        "b": "0",
+        "a": "0",
+        "m": False,
+        "R": True,
+        "wt": "CONTRACT_PRICE",
+        "ot": "STOP_MARKET",
+        "ps": "BOTH",
+        "cp": True,
+        "rp": "0",
+        "pP": False,
+        "si": 0,
+        "ss": 0,
+        "V": "EXPIRE_MAKER",
+        "pm": "NONE",
+        "gtd": 0
+    }
+}
+
+def newParsedCancelOrder():
+    return {
+    "order_id": 121046588788,
+    "group_id": "3",
+    "status": "CANCELED",
+    "symbol": "SOLUSDT",
+    "side": "SELL",
+    "type": "STOP_MARKET",
+    "qty": "0",
+    "direction": "LONG",
+    "updated_at": 1749008243657
 }
