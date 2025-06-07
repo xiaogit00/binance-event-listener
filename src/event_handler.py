@@ -3,7 +3,6 @@ def event_parser(new_binance_event) -> dict:
     try:
         parsed_event = {
             "order_id": new_binance_event["o"]["i"],
-            "group_id": new_binance_event["o"]["c"],
             "status": new_binance_event["o"]["X"], # NEW / EXPIRED / FILLED / CANCELED
             "symbol": new_binance_event["o"]["s"],
             "side": new_binance_event["o"]["S"], # BUY/SELL
@@ -41,7 +40,6 @@ def event_parser(new_binance_event) -> dict:
 '''
 CREATE TABLE orders (
 	order_id BIGINT,
-	group_id BIGINT,
 	symbol VARCHAR(16),
 	order_type VARCHAR(24),
 	ask_price DECIMAL,

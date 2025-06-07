@@ -47,7 +47,6 @@ def insertNewOrderByType(order_type, order_data):
     order_data (MO):
         {
         "order_id": 121058809222,
-        "group_id": "fOPYqvypuFM2LKJ3ihzKFZ",
         "status": "NEW",
         "symbol": "SOLUSDT",
         "side": "BUY",
@@ -59,7 +58,6 @@ def insertNewOrderByType(order_type, order_data):
     order_data (SL):
         {
             "order_id": 121112646034,
-            "group_id": "3",
             "status": "NEW",
             "symbol": "SOLUSDT",
             "side": "SELL",
@@ -79,13 +77,12 @@ def insertNewOrderByType(order_type, order_data):
                 logging.info(f"Existing order ID found for {order_data['order_id']}, skipping adding 'NEW' order to DB.")
                 return
             cur.execute("""
-                INSERT INTO orders (order_id, status, group_id, direction, symbol, order_type, ask_price, filled_price, side, created_at, updated_at)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                INSERT INTO orders (order_id, status, direction, symbol, order_type, ask_price, filled_price, side, created_at, updated_at)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 RETURNING *;
             """, (
                 order_data["order_id"],
                 order_data["status"],
-                order_data["group_id"],
                 order_data["direction"],
                 order_data["symbol"],
                 order_data["type"],
@@ -107,7 +104,6 @@ def findByIdAndUpdateFilledMarketOrder(order_id, order_data):
     '''
         {
         "order_id": 121058809222,
-        "group_id": "3",
         "status": "FILLED",
         "symbol": "SOLUSDT",
         "side": "BUY",
@@ -147,7 +143,6 @@ def findByIdAndUpdateFilledSLTPOrder(order_id, order_data):
         {
             "order_id": 121115517313,
             "group_id": "3",
-            "status": "FILLED",
             "symbol": "SOLUSDT",
             "side": "SELL",
             "type": "STOP_MARKET",
@@ -204,7 +199,7 @@ def findByIdAndCancel(order_id, order_data):
         conn.close()
 
 
-def add_new_order(res, group_id, ask_price):
+def add_new_order(res, ask_price):
     """Inserts a new order in orders table."""
     logging.info("Attempting to insert new order into DB...")
     order_id = res["orderId"]
@@ -216,12 +211,11 @@ def add_new_order(res, group_id, ask_price):
     try:
         with conn.cursor() as cur:
             cur.execute("""
-                INSERT INTO orders (order_id, group_id, symbol, order_type, ask_price, filled_price, side, created_at)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+                INSERT INTO orders (order_id, symbol, order_type, ask_price, filled_price, side, created_at)
+                VALUES (%s, %s, %s, %s, %s, %s, %s)
                 RETURNING *;
             """, (
                 order_id,
-                group_id,
                 symbol,
                 order_type,
                 ask_price,
