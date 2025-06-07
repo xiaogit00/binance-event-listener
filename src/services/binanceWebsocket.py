@@ -8,7 +8,7 @@ load_dotenv()
 
 def get_listen_key():
     url = f"{baseUrl}/fapi/v1/listenKey"
-    headers = {'X-MBX-APIKEY': os.getenv("LEI_BINANCE_API_KEY")}
+    headers = {'X-MBX-APIKEY': os.getenv("BINANCE_API_KEY")}
     response = requests.post(url, headers=headers)
     try:
         response.raise_for_status()
