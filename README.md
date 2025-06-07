@@ -51,10 +51,10 @@ INSERT INTO orders VALUES
 (1, 'NEW', 'LONG', 'SOLUSDT', 'STOP_ORDER', 173.30, 169.50, 'BUY', '2025-05-26 14:00:00', '2025-05-26 15:00:00');
 ```
 
-### 4. Ensure that the .env file has the following parameters so that `main.py` can run (edit it as per necessary):
-BINANCE_API_KEY=
-DB_NAME=your_local_db_name
-DB_USER= (tends to be your mac admin user)
-DB_PASSWORD= (tends to be nothing)
-DB_HOST=localhost
-DB_PORT=5432
+### 4. Ensure that the .env file has the following parameters so that `main.py` can run (edit it as per necessary):  
+BINANCE_API_KEY=  
+DB_NAME=your_local_db_name  
+DB_USER= (tends to be your mac admin user)  
+DB_PASSWORD= (tends to be nothing)  
+DB_HOST=localhost  
+DB_PORT=5432  
