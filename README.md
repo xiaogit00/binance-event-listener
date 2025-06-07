@@ -3,6 +3,10 @@ A service for keeping an open connection and listening to Binance Websockets, an
 
 Most of the code is in `main.py`. sample_api folder contains sample websocket events. 
 
+## Running the code:
+- Go to main.py and run. 
+
+
 ## Steps for Setting up Local DB:
 
 ### 1. Make sure postgresql and psql (cli) is installed
