@@ -86,7 +86,7 @@ def newFilledMarketOrder():
 
 def newParsedMarketOrder():
     return {
-    "order_id": 121058809222,
+    "order_id": 5,
     "status": "NEW",
     "symbol": "SOLUSDT",
     "side": "BUY",
@@ -98,7 +98,7 @@ def newParsedMarketOrder():
 
 def newParsedFilledMarketOrder():
     return {
-    "order_id": 121058809222,
+    "order_id": 5,
     "status": "FILLED",
     "symbol": "SOLUSDT",
     "side": "BUY",
@@ -155,7 +155,7 @@ def newSLOrder():
 
 def newParsedSLOrder():
     return {
-    "order_id": 121112646034,
+    "order_id": 6,
     "status": "NEW",
     "symbol": "SOLUSDT",
     "side": "SELL",
@@ -211,7 +211,7 @@ def newFilledSLOrder():
 
 def newParsedFilledSLOrder():
     return {
-    "order_id": 121112646034,
+    "order_id": 6,
     "status": "FILLED",
     "symbol": "SOLUSDT",
     "side": "SELL",
@@ -267,7 +267,7 @@ def newCancelOrder():
 
 def newParsedCancelOrder():
     return {
-    "order_id": 121046588788,
+    "order_id": 3,
     "status": "CANCELED",
     "symbol": "SOLUSDT",
     "side": "SELL",

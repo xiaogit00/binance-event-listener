@@ -2,201 +2,152 @@ import os
 import psycopg2
 from dotenv import load_dotenv
 from src.services.db_connection import get_connection
+from src.utils.supabase_client import get_supabase_client
 import logging
+
 
 from datetime import datetime
 
 load_dotenv()
+supabase = get_supabase_client()
 
 def get_one_order(order_id):
     """Gets one order"""
-    conn = get_connection()
     try:
-        with conn.cursor() as cur:
-            cur.execute("SELECT * FROM orders WHERE order_id=%s;", [order_id])
-            db_res = cur.fetchall()
-            if len(db_res):
-                print("THERE IS AN ORDER ID EXISTING")
-            return db_res
-    finally:
-        conn.close()
+        res = (
+            supabase.table("orders")
+            .select("*")
+            .eq("order_id", order_id)
+            .execute()
+        )
+        return res
+    except Exception as e: 
+        print("There's an issue getting one order from supabase: ", e)
 
 def get_orders():
     """Get all orders"""
-    conn = get_connection()
     try:
-        with conn.cursor() as cur:
-            cur.execute("SELECT * FROM orders;")
-            return cur.fetchall()
-    finally:
-        conn.close()
+        res = (
+            supabase.table("orders")
+            .select("*")
+            .execute()
+        )
+        return res
+    except Exception as e: 
+        print("There's an issue getting supabase table: ", e)
 
 def delete_orders():
     """Get all orders"""
-    conn = get_connection()
     try:
-        with conn.cursor() as cur:
-            cur.execute("DELETE FROM orders;")
-            conn.commit()
-    finally:
-        conn.close()
+        res = (
+            supabase.table("orders")
+            .delete()
+            .neq("order_id", 0)
+            .execute()
+        )
+        return res
+    except Exception as e: 
+        print("There's an issue updating supabase table: ", e)
 
 def insertNewOrderByType(order_type, order_data):
     logging.info("Attempting to insert new order into DB...")
-    '''
-    order_data (MO):
-        {
-        "order_id": 121058809222,
-        "status": "NEW",
-        "symbol": "SOLUSDT",
-        "side": "BUY",
-        "type": "MARKET",
-        "qty": "0.09",
-        "direction": "LONG",
-        "created_at": 1749013292798
-        }
-    order_data (SL):
-        {
-            "order_id": 121112646034,
-            "status": "NEW",
-            "symbol": "SOLUSDT",
-            "side": "SELL",
-            "type": "STOP_MARKET",
-            "qty": "0", # FOR SL, qty will be 0, as by default im set for "closePosition to be True "
-            "direction": "LONG",
-            "created_at": 1749037471697,
-            "ask_price": "155.7"
-        }
-    '''
-    conn = get_connection()
     try:
-        with conn.cursor() as cur:
-            cur.execute("SELECT * FROM orders WHERE order_id=%s;", [order_data['order_id']])
-            db_res = cur.fetchall()
-            if len(db_res):
-                logging.info(f"Existing order ID found for {order_data['order_id']}, skipping adding 'NEW' order to DB.")
-                return
-            cur.execute("""
-                INSERT INTO orders (order_id, status, direction, symbol, order_type, ask_price, filled_price, side, created_at, updated_at)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-                RETURNING *;
-            """, (
-                order_data["order_id"],
-                order_data["status"],
-                order_data["direction"],
-                order_data["symbol"],
-                order_data["type"],
-                None if order_data["type"] == "MARKET" else order_data["ask_price"], # Ask Price is none
-                None, # Filled Price Price is none
-                order_data["side"],
-                datetime.fromtimestamp(order_data["created_at"]/1000),
-                None
-            ))
-            new_order = cur.fetchone()
-            conn.commit()
-            logging.info(f"Successfully inserted new order into DB, response: {new_order}")
-            return new_order
-    finally:
-        conn.close()
+        newOrder = {
+            "order_id":order_data["order_id"],
+            "status":order_data["status"],
+            "direction":order_data["direction"],
+            "symbol":order_data["symbol"],
+            "order_type":order_data["type"],
+            "ask_price":None if order_data["type"] == "MARKET" else order_data["ask_price"], # Ask Price is none,
+            "filled_price":None, # Filled Price Price is none
+            "side":order_data["side"],
+            "created_at": str(datetime.fromtimestamp(order_data["created_at"]/1000)),
+            "updated_at": None,
+        }
+        res = (
+            supabase.table("orders")
+            .insert(newOrder)
+            .execute()
+        )
+        return res
+    except Exception as e: 
+        print("There's an issue updating supabase table: ", e)
+
         
 def findByIdAndUpdateFilledMarketOrder(order_id, order_data):
     logging.info(f"Attempting to UPDATE order {order_id} to FILLED")
-    '''
-        {
-        "order_id": 121058809222,
-        "status": "FILLED",
-        "symbol": "SOLUSDT",
-        "side": "BUY",
-        "type": "MARKET",
-        "qty": "0.09",
-        "direction": "LONG",
-        "ask_price": "156.5",
-        "filled_price": "156.5",
-        "updated_at": 1749013292798
-        }
-    '''
-    conn = get_connection()
     try:
-        with conn.cursor() as cur:
-            cur.execute("""
-                            UPDATE orders
-                            SET status = %s, ask_price = %s, filled_price = %s, updated_at = %s
-                            WHERE order_id = %s
-                            RETURNING *;
-                        """, (
-                order_data['status'], 
-                order_data['ask_price'],
-                order_data['filled_price'],
-                datetime.fromtimestamp(order_data["updated_at"]/1000),
-                order_data['order_id'],
-            ))
-            new_order = cur.fetchone()
-            conn.commit()
-            logging.info(f"Successfully updated Market Order {order_data['order_id']} with FILLED info: {new_order}")
-            return new_order
-    finally:
-        conn.close()
+        updated_market_order = {
+            "status":order_data["status"],
+            "ask_price":order_data['ask_price'],
+            "filled_price":order_data['filled_price'],
+            "updated_at": str(datetime.fromtimestamp(order_data["updated_at"]/1000)),
+        }
+        res = (
+            supabase.table("orders")
+            .update(updated_market_order)
+            .eq("order_id", order_id)
+            .execute()
+        )
+        return res
+    except Exception as e: 
+        print("There's an issue updating supabase table: ", e)
 
 def findByIdAndUpdateFilledSLTPOrder(order_id, order_data):
     logging.info(f"Attempting to UPDATE order {order_id} to FILLED")
-    '''
-        {
-            "order_id": 121115517313,
-            "group_id": "3",
-            "symbol": "SOLUSDT",
-            "side": "SELL",
-            "type": "STOP_MARKET",
-            "qty": "0.09",
-            "direction": "LONG",
-            "filled_price": "156.02",
-            "updated_at": 1749038674248
-}
-    '''
-    conn = get_connection()
     try:
-        with conn.cursor() as cur:
-            cur.execute("""
-                            UPDATE orders
-                            SET status = %s, filled_price = %s, updated_at = %s
-                            WHERE order_id = %s
-                            RETURNING *;
-                        """, (
-                order_data['status'],
-                order_data['filled_price'],
-                datetime.fromtimestamp(order_data["updated_at"]/1000),
-                order_id,
-            ))
-            new_order = cur.fetchone()
-            conn.commit()
-            logging.info(f"Successfully updated Market Order {order_id} with FILLED info: {new_order}")
-            return new_order
-    finally:
-        conn.close()
+        updated_sltp_order = {
+            "status":order_data["status"],
+            "filled_price":order_data['filled_price'],
+            "updated_at": str(datetime.fromtimestamp(order_data["updated_at"]/1000)),
+        }
+        res = (
+            supabase.table("orders")
+            .update(updated_sltp_order)
+            .eq("order_id", order_id)
+            .execute()
+        )
+        return res
+    except Exception as e: 
+        print("There's an issue updating supabase table: ", e)
+
+    # conn = get_connection()
+    # try:
+    #     with conn.cursor() as cur:
+    #         cur.execute("""
+    #                         UPDATE orders
+    #                         SET status = %s, filled_price = %s, updated_at = %s
+    #                         WHERE order_id = %s
+    #                         RETURNING *;
+    #                     """, (
+    #             order_data['status'],
+    #             order_data['filled_price'],
+    #             datetime.fromtimestamp(order_data["updated_at"]/1000),
+    #             order_id,
+    #         ))
+    #         new_order = cur.fetchone()
+    #         conn.commit()
+    #         logging.info(f"Successfully updated Market Order {order_id} with FILLED info: {new_order}")
+    #         return new_order
+    # finally:
+    #     conn.close()
 
 def findByIdAndCancel(order_id, order_data):
     '''
     Updates the status of the order to be cancelled
     '''
-    logging.info(f"Attempting to UPDATE order {order_id} to CANCELED")
-    conn = get_connection()
+    print(f"Attempting to UPDATE order {order_id} to CANCELED")
     try:
-        with conn.cursor() as cur:
-            cur.execute("""
-                            UPDATE orders
-                            SET status = %s, updated_at = %s
-                            WHERE order_id = %s
-                            RETURNING *;
-                        """, (
-                order_data['status'],
-                datetime.fromtimestamp(order_data["updated_at"]/1000),
-                order_id,
-            ))
-            new_order = cur.fetchone()
-            conn.commit()
-            logging.info(f"Successfully updated Market Order {order_id} to cancelled {new_order}")
-            return new_order
-    finally:
-        conn.close()
+        res = (
+            supabase.table("orders")
+            .update({"status": order_data['status'], "updated_at": str(datetime.fromtimestamp(order_data["updated_at"]/1000))})
+            .eq("order_id", order_id)
+            .execute()
+        )
+        return res
+    except Exception as e: 
+        print("There's an issue updating supabase table: ", e)
+
 
 
 def add_new_order(res, ask_price):
