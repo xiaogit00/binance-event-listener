@@ -111,26 +111,6 @@ def findByIdAndUpdateFilledSLTPOrder(order_id, order_data):
     except Exception as e: 
         print("There's an issue updating supabase table: ", e)
 
-    # conn = get_connection()
-    # try:
-    #     with conn.cursor() as cur:
-    #         cur.execute("""
-    #                         UPDATE orders
-    #                         SET status = %s, filled_price = %s, updated_at = %s
-    #                         WHERE order_id = %s
-    #                         RETURNING *;
-    #                     """, (
-    #             order_data['status'],
-    #             order_data['filled_price'],
-    #             datetime.fromtimestamp(order_data["updated_at"]/1000),
-    #             order_id,
-    #         ))
-    #         new_order = cur.fetchone()
-    #         conn.commit()
-    #         logging.info(f"Successfully updated Market Order {order_id} with FILLED info: {new_order}")
-    #         return new_order
-    # finally:
-    #     conn.close()
 
 def findByIdAndCancel(order_id, order_data):
     '''
@@ -148,38 +128,64 @@ def findByIdAndCancel(order_id, order_data):
     except Exception as e: 
         print("There's an issue updating supabase table: ", e)
 
-
-
-def add_new_order(res, ask_price):
-    """Inserts a new order in orders table."""
-    logging.info("Attempting to insert new order into DB...")
-    order_id = res["orderId"]
-    symbol = res["symbol"]
-    order_type = res["type"]
-    side = res["side"]
-    created_at = str(datetime.fromtimestamp(round(res["updateTime"]/1000, 0)))
-    conn = get_connection()
+def insertNewTrade(group_id, order_data):
+    logging.info("Attempting to insert new trade into DB...")
     try:
-        with conn.cursor() as cur:
-            cur.execute("""
-                INSERT INTO orders (order_id, symbol, order_type, ask_price, filled_price, side, created_at)
-                VALUES (%s, %s, %s, %s, %s, %s, %s)
-                RETURNING *;
-            """, (
-                order_id,
-                symbol,
-                order_type,
-                ask_price,
-                0, 
-                side,
-                created_at
-            ))
-            new_order = cur.fetchone()
-            conn.commit()
-            logging.info(f"Successfully inserted new order into DB, response: {new_order}")
-            return new_order
-    finally:
-        conn.close()
+        newTrade = {
+            "group_id": group_id,
+            "symbol": order_data["symbol"],
+            "direction":order_data["direction"],
+            "entry_time": str(datetime.fromtimestamp(order_data["updated_at"]/1000)),
+            "exit_time": None, # This is entered only upon exit
+            "entry_price":order_data["filled_price"], 
+            "exit_price":None, # This is entered only upon exit
+            "qty": order_data["qty"],
+            "realized_pnl": None,# This is entered only upon exit
+            "is_closed": False 
+        }
+        res = (
+            supabase.table("trades")
+            .insert(newTrade)
+            .execute()
+        )
+        return res
+    except Exception as e: 
+        print("There's an issue updating supabase table: ", e)
+
+def get_entry_price_for_trade(group_id):
+    try:
+        res = (
+            supabase.table("trades")
+            .select("*")
+            .eq("group_id", group_id)
+            .execute()
+        )
+        if not res.data:
+            return None
+        return res.data[0]['entry_price']
+    except Exception as e: 
+        print("There's an issue getting one order from supabase: ", e)
+
+def updateTrade(group_id, order_data):
+    logging.info("Attempting to update trade...")
+    try:
+        entry_price = get_entry_price_for_trade(group_id)
+        updated_trade = {
+            "exit_time":str(datetime.fromtimestamp(order_data["updated_at"]/1000)),
+            "exit_price":order_data['filled_price'],
+            "realized_pnl":round((float(order_data['filled_price']) - entry_price)/entry_price, 3),
+            "is_closed": True,
+        }
+        res = (
+            supabase.table("trades")
+            .update(updated_trade)
+            .eq("group_id", group_id)
+            .execute()
+        )
+        return res
+    except Exception as e: 
+        print("There's an issue updating supabase table: ", e)
+
 
 def get_latest_group_id() -> int:
     """Makes connection to orders table and gets the latest group ID of the orders."""
@@ -197,3 +203,18 @@ def get_latest_group_id() -> int:
                 return res[0][0]
     finally:
         conn.close()
+    
+
+def get_group_id_by_order(order_id):
+    try:
+        res = (
+            supabase.table("order_groups")
+            .select("*")
+            .eq("order_id", order_id)
+            .execute()
+        )
+        if not res.data:
+            return None
+        return res.data[0]['group_id']
+    except Exception as e: 
+        print("There's an issue getting one order from supabase: ", e)

@@ -47,3 +47,19 @@
 2025-06-07 08:56:15 | INFO   | db.py::findByIdAndUpdateFilledSLTPOrder() | Successfully updated Market Order 121626026634 with FILLED info: (121626026634, 'FILLED', 'LONG', 'SOLUSDT', 'TAKE_PROFIT', Decimal('148.5'), Decimal('148.49'), 'SELL', datetime.datetime(2025, 6, 7, 8, 56, 4, 433000), datetime.datetime(2025, 6, 7, 8, 56, 15, 241000))
 2025-06-07 08:59:26 | ERROR  | base_events.py::default_exception_handler() | Task was destroyed but it is pending!
 task: <Task cancelling name='Task-2' coro=<websocket_binance_event_listener() running at /Users/guoleibing/p/binance_event_listener/src/services/binanceWebsocket.py:27> wait_for=<Future pending cb=[shield.<locals>._outer_done_callback() at /Users/guoleibing/miniconda3/envs/tradingbot/lib/python3.13/asyncio/tasks.py:975, Task.task_wakeup()]> cb=[gather.<locals>._done_callback() at /Users/guoleibing/miniconda3/envs/tradingbot/lib/python3.13/asyncio/tasks.py:820]>
+2025-06-09 21:51:04 | ERROR  | base_events.py::default_exception_handler() | Task exception was never retrieved
+future: <Task finished name='Task-2' coro=<websocket_binance_event_listener() done, defined at /Users/lei/p/binance-event-listener/src/services/binanceWebsocket.py:20> exception=KeyError('listenKey')>
+Traceback (most recent call last):
+  File "/Users/lei/p/binance-event-listener/src/services/binanceWebsocket.py", line 21, in websocket_binance_event_listener
+    listen_key = get_listen_key()
+                 ^^^^^^^^^^^^^^^^
+  File "/Users/lei/p/binance-event-listener/src/services/binanceWebsocket.py", line 17, in get_listen_key
+    listen_key = response.json()['listenKey']
+                 ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+KeyError: 'listenKey'
+2025-06-09 21:56:48 | INFO   | binanceWebsocket.py::websocket_binance_event_listener() | Connecting to wss://fstream.binance.com/ws/r6cu4SOih8liRJRbGtnYtZMZL7jl0qFXw1yyIBHwyKFpBnVlINprWcZXw4vACi7y
+2025-06-09 21:56:48 | INFO   | binanceWebsocket.py::websocket_binance_event_listener() | ✅ Connected to Binance event listening websocket
+2025-06-09 21:56:57 | ERROR  | base_events.py::default_exception_handler() | Task was destroyed but it is pending!
+task: <Task cancelling name='Task-5' coro=<WebSocketCommonProtocol.close_connection() running at /Users/lei/miniconda3/envs/trading-bot/lib/python3.12/site-packages/websockets/legacy/protocol.py:1311> wait_for=<Future pending cb=[shield.<locals>._outer_done_callback() at /Users/lei/miniconda3/envs/trading-bot/lib/python3.12/asyncio/tasks.py:922, Task.task_wakeup()]> cb=[gather.<locals>._done_callback() at /Users/lei/miniconda3/envs/trading-bot/lib/python3.12/asyncio/tasks.py:767, shield.<locals>._inner_done_callback() at /Users/lei/miniconda3/envs/trading-bot/lib/python3.12/asyncio/tasks.py:905]>
+2025-06-09 21:56:57 | ERROR  | base_events.py::default_exception_handler() | Task was destroyed but it is pending!
+task: <Task cancelling name='Task-2' coro=<websocket_binance_event_listener() running at /Users/lei/p/binance-event-listener/src/services/binanceWebsocket.py:27> wait_for=<Future pending cb=[shield.<locals>._outer_done_callback() at /Users/lei/miniconda3/envs/trading-bot/lib/python3.12/asyncio/tasks.py:922, Task.task_wakeup()]> cb=[gather.<locals>._done_callback() at /Users/lei/miniconda3/envs/trading-bot/lib/python3.12/asyncio/tasks.py:767]>
