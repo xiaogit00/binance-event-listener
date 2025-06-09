@@ -6,4 +6,10 @@ res = (
     .select("*")
     .execute()
 )
-print(res)
+print(res.data[0])
+
+# import os
+# from supabase import create_client, Client
+# url: str = os.environ.get("SUPABASE_URL")
+# key: str = os.environ.get("SUPABASE_KEY")
+# supabase: Client = create_client(url, key)
