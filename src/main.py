@@ -22,18 +22,30 @@ async def main():
 
         if parsed_event['status'] == "CANCELED": # UPDATE CANCELLED FIRST
             db.findByIdAndCancel(parsed_event['order_id'], parsed_event) 
+
         elif parsed_event['status'] == "NEW": # New Order
             db.insertNewOrderByType(parsed_event["type"] ,parsed_event) 
+
         elif parsed_event['type'] == "MARKET" and parsed_event['status'] == "FILLED":
             db.findByIdAndUpdateFilledMarketOrder(parsed_event['order_id'], parsed_event)
             new_order_group_id = db.get_group_id_by_order(parsed_event['order_id'])
             if new_order_group_id:
                 db.insertNewTrade(new_order_group_id, parsed_event)
+            else: # This catches the case where I just insert an MO, for test for instance, which an accompanying order_id is not found 
+                logging.info("No group_id found for order, inserting a new entry in order_groups table")
+                new_group_id = db.get_latest_group_id()
+                new_group_id = new_group_id + 1 if new_group_id else 0
+                db.insertNewOrderGroup(new_group_id, parsed_event)
         elif parsed_event['type'] != "MARKET" and parsed_event['status'] == "FILLED":
             db.findByIdAndUpdateFilledSLTPOrder(parsed_event['order_id'], parsed_event) 
             group_id = db.get_group_id_by_order(parsed_event['order_id'])
             if new_order_group_id:
                 db.updateTrade(group_id, parsed_event)
+            else: # This catches the case where I just insert an SL/TP, for test for instance, which an accompanying order_id is not found 
+                logging.info("No group_id found for order, inserting a new entry in order_groups table")
+                new_group_id = db.get_latest_group_id()
+                new_group_id = new_group_id + 1 if new_group_id else 0
+                db.insertNewOrderGroup(new_group_id, parsed_event)
 
 
 
