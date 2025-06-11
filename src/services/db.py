@@ -62,6 +62,7 @@ def insertNewOrderByType(order_type, order_data):
             "ask_price":None if order_data["type"] == "MARKET" else order_data["ask_price"], # Ask Price is none,
             "filled_price":None, # Filled Price Price is none
             "side":order_data["side"],
+            "qty": order_data['qty'],
             "created_at": str(datetime.fromtimestamp(order_data["created_at"]/1000)),
             "updated_at": None,
         }
@@ -233,7 +234,7 @@ def insertNewOrderGroup(new_group_id, order_data) -> Optional[int]:
                     "group_id": new_group_id,
                     "order_id": order_data['order_id'],
                     "type": "MO",
-                    "side": order_data['direction'],
+                    "direction": order_data['direction'],
                     "breakeven_price": None,
                     "breakeven_threshold": None,
                     "created_at": str(datetime.fromtimestamp(order_data["updated_at"]/1000))
@@ -249,3 +250,21 @@ def insertNewOrderGroup(new_group_id, order_data) -> Optional[int]:
         return res
     except Exception as e: 
         print("There's an issue getting supabase table: ", e)
+
+def find_remaining_order(group_id, remaining_order):
+    logging.info(f"Trying to remaining order_id of type {remaining_order} by group_id: {group_id}")
+    
+    try:
+        res = (
+            supabase.table("order_groups")
+            .select("*")
+            .eq("group_id", group_id)
+            .eq("type", remaining_order)
+            .execute()
+        )
+        if not res.data:
+            logging.info(f"Can't find record")
+            return None
+        return res.data[0]['order_id']
+    except Exception as e: 
+        print("There's an issue getting one order from supabase: ", e)

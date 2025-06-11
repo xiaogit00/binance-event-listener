@@ -160,7 +160,7 @@ def newParsedSLOrder():
     "symbol": "SOLUSDT",
     "side": "SELL",
     "type": "STOP_MARKET",
-    "qty": "0", # FOR SL, qty will be 0, as by default im set for "closePosition to be True "
+    "qty": "0.09", 
     "direction": "LONG",
     "created_at": 1749037471697,
     "ask_price": "155.7"
