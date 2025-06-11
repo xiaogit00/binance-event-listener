@@ -206,7 +206,7 @@ def get_latest_group_id() -> int:
     
 
 def get_group_id_by_order(order_id):
-    logging.info("Attempting to get group ID by order ID:", order_id)
+    logging.info("Attempting to get group ID by orderdsadsasa ID:", order_id)
     try:
         res = (
             supabase.table("order_groups")
