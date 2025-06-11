@@ -28,7 +28,7 @@ async def main():
 
         elif parsed_event['type'] == "MARKET" and parsed_event['status'] == "FILLED":
             db.findByIdAndUpdateFilledMarketOrder(parsed_event['order_id'], parsed_event)
-
+            asyncio.sleep(5)
             new_order_group_id = db.get_group_id_by_order(parsed_event['order_id'])
             if new_order_group_id:
                 db.insertNewTrade(new_order_group_id, parsed_event)
