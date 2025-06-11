@@ -206,6 +206,7 @@ def get_latest_group_id() -> int:
     
 
 def get_group_id_by_order(order_id):
+    logging.info("Attempting to get group ID by order ID:", order_id)
     try:
         res = (
             supabase.table("order_groups")
@@ -214,6 +215,7 @@ def get_group_id_by_order(order_id):
             .execute()
         )
         if not res.data:
+            logging.info(f"Group ID cannot be found for order_id... {order_id}")
             return None
         return res.data[0]['group_id']
     except Exception as e: 
