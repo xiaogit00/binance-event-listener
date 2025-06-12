@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 from src.services.db_connection import get_connection
 from src.utils.supabase_client import get_supabase_client
 import logging
+from typing import Optional
 
 
 from datetime import datetime
@@ -61,6 +62,7 @@ def insertNewOrderByType(order_type, order_data):
             "ask_price":None if order_data["type"] == "MARKET" else order_data["ask_price"], # Ask Price is none,
             "filled_price":None, # Filled Price Price is none
             "side":order_data["side"],
+            "qty": order_data['qty'],
             "created_at": str(datetime.fromtimestamp(order_data["created_at"]/1000)),
             "updated_at": None,
         }
@@ -148,6 +150,8 @@ def insertNewTrade(group_id, order_data):
             .insert(newTrade)
             .execute()
         )
+        if res.data:
+            logging.info(f"Successfully inserted new trade with group_id {group_id} into trades table.")
         return res
     except Exception as e: 
         print("There's an issue updating supabase table: ", e)
@@ -182,31 +186,34 @@ def updateTrade(group_id, order_data):
             .eq("group_id", group_id)
             .execute()
         )
+        if res.data:
+            logging.info(f"Successfully updated trade with group_id {group_id} in the trades table.")
         return res
     except Exception as e: 
         print("There's an issue updating supabase table: ", e)
 
 
-def get_latest_group_id() -> int:
-    """Makes connection to orders table and gets the latest group ID of the orders."""
-    conn = get_connection()
+def get_latest_group_id() -> Optional[int]:
+    logging.info("Trying to get the latest group_id")
     try:
-        with conn.cursor() as cur:
-            logging.info("Fetching latest group_id from orders table")
-            cur.execute("SELECT group_id FROM orders ORDER BY created_at DESC LIMIT 1;")
-            res = cur.fetchall()
-            if not res:
-                logging.info("No latest_group_id found, returning id 0")
-                return 0
-            else:
-                logging.info(f"Latest group_id found from orders table: {res[0][0]}")
-                return res[0][0]
-    finally:
-        conn.close()
+        res = (
+            supabase.table("order_groups")
+            .select("group_id", count="exact")
+            .order("group_id", desc=True)
+            .limit(1)
+            .execute()
+        )
+        logging.info(f"Retrieved {res} from db")
+        if not res.data:
+            logging.info("No latest groupId found from group_orders table")
+            return None
+        return res.data[0]['group_id']
+    except Exception as e: 
+        print("There's an issue getting supabase table: ", e)
     
 
-def get_group_id_by_order(order_id):
-    logging.info("Attempting to get group ID by order ID:", order_id)
+def get_group_id_by_order(order_id) -> Optional[int]:
+    logging.info(f"Trying to get latest group_id by order: {order_id}")
     try:
         res = (
             supabase.table("order_groups")
@@ -215,8 +222,49 @@ def get_group_id_by_order(order_id):
             .execute()
         )
         if not res.data:
-            logging.info(f"Group ID cannot be found for order_id... {order_id}")
+            logging.info(f"No associated group_id found for order_id: {order_id}")
             return None
         return res.data[0]['group_id']
+    except Exception as e: 
+        print("There's an issue getting one order from supabase: ", e)
+
+def insertNewOrderGroup(new_group_id, order_data) -> Optional[int]:
+    logging.info("Trying to insert a new order_group record")
+    group_data = {
+                    "group_id": new_group_id,
+                    "order_id": order_data['order_id'],
+                    "type": "MO",
+                    "direction": order_data['direction'],
+                    "breakeven_price": None,
+                    "breakeven_threshold": None,
+                    "created_at": str(datetime.fromtimestamp(order_data["updated_at"]/1000))
+                    }
+    try:
+        res = (
+            supabase.table("order_groups")
+            .insert(group_data)
+            .execute()
+        )
+        if res.data:
+            logging.info(f"Successfully inserted new entry with group_id {new_group_id} into order_group table.")
+        return res
+    except Exception as e: 
+        print("There's an issue getting supabase table: ", e)
+
+def find_remaining_order(group_id, remaining_order):
+    logging.info(f"Trying to remaining order_id of type {remaining_order} by group_id: {group_id}")
+    
+    try:
+        res = (
+            supabase.table("order_groups")
+            .select("*")
+            .eq("group_id", group_id)
+            .eq("type", remaining_order)
+            .execute()
+        )
+        if not res.data:
+            logging.info(f"Can't find record")
+            return None
+        return res.data[0]['order_id']
     except Exception as e: 
         print("There's an issue getting one order from supabase: ", e)

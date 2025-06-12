@@ -1,5 +1,6 @@
 from dotenv import load_dotenv
-import requests, os, asyncio, logging, websockets, json
+
+import requests, os, asyncio, logging, websockets, json, sys
 from websockets.exceptions import ConnectionClosedError, ConnectionClosedOK
 baseUrl = 'https://fapi.binance.com'
 listen_key = None
@@ -26,12 +27,19 @@ def get_listen_key():
     try:
         response.raise_for_status()
     except Exception as e:
-        print(e)
+        logging.error("Something went wrong getting listen key")
+        logging.error(e)
+        logging.error(response.text)
+        raise e
     listen_key = response.json()['listenKey']
     return listen_key
 
 async def websocket_binance_event_listener(binance_event_queue: asyncio.Queue):
-    listen_key = get_listen_key()
+    try:
+        listen_key = get_listen_key()
+    except:
+        logging.error("Problems getting listening key, highly related to IP restrictions.")
+        return
     ws_url = f"wss://fstream.binance.com/ws/{listen_key}"
     logging.info(f"Connecting to {ws_url}")
 

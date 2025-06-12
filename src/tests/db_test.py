@@ -38,8 +38,17 @@ class TestDB(unittest.TestCase):
     # def test_get_entry_price_for_trade(self):
     #     res = db.get_entry_price_for_trade(1)
     #     print(res)
-    def test_update_trade(self):
-        res = db.updateTrade(1, event_samples.newParsedFilledSLOrder())
+    # def test_update_trade(self):
+    #     res = db.updateTrade(1, event_samples.newParsedFilledSLOrder())
+    #     print(res)
+    # def test_get_latest_group_id(self):
+    #     res = db.get_latest_group_id()
+    #     print(res)
+    # def test_insert_new_group_order(self):
+    #     res = db.insertNewOrderGroup(1, event_samples.newParsedFilledMarketOrder())
+    #     print(res)
+    def test_find_remaining_order(self):
+        res = db.find_remaining_order(0,"SL")
         print(res)
 
 if __name__ == '__main__':
