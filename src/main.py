@@ -9,6 +9,7 @@ async def main():
     init_logger()
     binance_event_queue = asyncio.Queue()
     asyncio.create_task(binanceWebsocket.websocket_binance_event_listener(binance_event_queue)) # Creates a background task. 
+    asyncio.create_task(binanceWebsocket.keep_listen_key_alive())
     while True:
         new_binance_event = await binance_event_queue.get()
         logging.info("🔴 Awaiting next event in queue from Binance event websocket...")
