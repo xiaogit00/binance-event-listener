@@ -42,11 +42,7 @@ async def main():
         elif parsed_event['type'] != "MARKET" and parsed_event['status'] == "FILLED":
             db.findByIdAndUpdateFilledSLTPOrder(parsed_event['order_id'], parsed_event) 
             group_id = db.get_group_id_by_order(parsed_event['order_id'])
-            remaining_order = None
-            if parsed_event['type'] == "STOP_MARKET":
-                remaining_order = "TP"
-            else:
-                remaining_order = "SL"
+            remaining_order = "TP" if parsed_event['type'] == "STOP_MARKET" else "SL"
             if new_order_group_id:
                 db.updateTrade(group_id, parsed_event)
                 remaining_order_id = db.find_remaining_order(group_id, remaining_order)
