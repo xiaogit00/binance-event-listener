@@ -7,6 +7,19 @@ listen_key = None
 
 load_dotenv()
 
+async def keep_listen_key_alive():
+    while True:
+        await asyncio.sleep(30 * 60)  # 30 minutes
+        try:
+            url = f"{baseUrl}/fapi/v1/listenKey"
+            headers = {'X-MBX-APIKEY': os.getenv("BINANCE_API_KEY")}
+            response = requests.put(url, headers=headers)
+            response.raise_for_status()
+            logging.info("🔄 Successfully sent keep-alive for listen key")
+        except Exception as e:
+            logging.warning(f"⚠️ Failed to keep listen key alive: {e}")
+
+
 def get_listen_key():
     url = f"{baseUrl}/fapi/v1/listenKey"
     headers = {'X-MBX-APIKEY': os.getenv("BINANCE_API_KEY")}
