@@ -44,12 +44,12 @@ class TestDB(unittest.TestCase):
     # def test_get_latest_group_id(self):
     #     res = db.get_latest_group_id()
     #     print(res)
-    # def test_insert_new_group_order(self):
-    #     res = db.insertNewOrderGroup(1, event_samples.newParsedFilledMarketOrder())
-    #     print(res)
-    def test_find_remaining_order(self):
-        res = db.find_remaining_order(0,"SL")
+    def test_insert_new_group_order(self):
+        res = db.insertNewOrderGroup(000, event_samples.newParsedFilledMarketOrder())
         print(res)
+    # def test_find_remaining_order(self):
+    #     res = db.find_remaining_order(0,"SL")
+    #     print(res)
 
 if __name__ == '__main__':
     asyncio.run(unittest.main())
