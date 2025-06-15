@@ -1,5 +1,4 @@
 import os
-import psycopg2
 from dotenv import load_dotenv
 from src.services.db_connection import get_connection
 from src.utils.supabase_client import get_supabase_client
