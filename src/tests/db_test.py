@@ -2,7 +2,7 @@ from src.services import db
 from src.tests import event_samples
 import unittest
 import asyncio
-
+from src.utils import logger
 
 class TestDB(unittest.TestCase):
     # def test_delete_orders(self):
@@ -30,11 +30,12 @@ class TestDB(unittest.TestCase):
     #     res = db.get_one_order('6')
     #     print(res)
     # def test_get_group_id_by_order(self):
-    #     res = db.get_group_id_by_order(1323)
-    #     print(res)
-    # def test_insert_new_trade(self):
-    #     res = db.insertNewTrade(1, event_samples.newParsedFilledMarketOrder())
-    #     print(res)
+    #     logger.init_logger()
+    #     res = db.get_group_id_by_order(123504619285)
+    #     print(res == True)
+    def test_insert_new_trade(self):
+        res = db.insertNewTrade(-2, event_samples.newParsedFilledMarketOrder())
+        print(res)
     # def test_get_entry_price_for_trade(self):
     #     res = db.get_entry_price_for_trade(1)
     #     print(res)
@@ -44,9 +45,9 @@ class TestDB(unittest.TestCase):
     # def test_get_latest_group_id(self):
     #     res = db.get_latest_group_id()
     #     print(res)
-    def test_insert_new_group_order(self):
-        res = db.insertNewOrderGroup(000, event_samples.newParsedFilledMarketOrder())
-        print(res)
+    # def test_insert_new_group_order(self):
+    #     res = db.insertNewOrderGroup(000, event_samples.newParsedFilledMarketOrder())
+    #     print(res)
     # def test_find_remaining_order(self):
     #     res = db.find_remaining_order(0,"SL")
     #     print(res)

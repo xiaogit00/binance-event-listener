@@ -7,6 +7,7 @@ from src.services import db
 
 async def main():
     init_logger()
+    new_group_id = -1
     binance_event_queue = asyncio.Queue()
     asyncio.create_task(binanceWebsocket.websocket_binance_event_listener(binance_event_queue)) # Creates a background task. 
     asyncio.create_task(binanceWebsocket.keep_listen_key_alive())
@@ -34,10 +35,10 @@ async def main():
             if new_order_group_id:
                 db.insertNewTrade(new_order_group_id, parsed_event)
             else: # This catches the case where I just insert an MO, for test for instance, which an accompanying order_id is not found 
-                logging.info("No group_id found for order, inserting a into order_groups with group_id = NONE")
-                new_group_id = None
+                logging.info(f"No group_id found for order, inserting a new order_groups with group_id = {new_group_id}")
                 db.insertNewOrderGroup(new_group_id, parsed_event)
                 db.insertNewTrade(new_group_id, parsed_event)
+                new_group_id -= 1
         elif parsed_event['type'] != "MARKET" and parsed_event['status'] == "FILLED":
             db.findByIdAndUpdateFilledSLTPOrder(parsed_event['order_id'], parsed_event) 
             group_id = db.get_group_id_by_order(parsed_event['order_id'])
