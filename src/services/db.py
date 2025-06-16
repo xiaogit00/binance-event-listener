@@ -229,7 +229,6 @@ def get_group_id_by_order(order_id) -> Optional[int]:
         print("There's an issue getting one order from supabase: ", e)
 
 def insertNewOrderGroup(new_group_id, order_data) -> Optional[int]:
-    logging.info("Trying to insert a new order_group record")
     group_data = {
                     "group_id": new_group_id,
                     "order_id": order_data['order_id'],
@@ -239,6 +238,7 @@ def insertNewOrderGroup(new_group_id, order_data) -> Optional[int]:
                     "breakeven_threshold": None,
                     "created_at": str(datetime.fromtimestamp(order_data["updated_at"]/1000))
                     }
+    logging.info(f"Trying to insert a new order_group record with params: {group_data}")
     try:
         res = (
             supabase.table("order_groups")

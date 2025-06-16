@@ -29,14 +29,13 @@ async def main():
 
         elif parsed_event['type'] == "MARKET" and parsed_event['status'] == "FILLED":
             db.findByIdAndUpdateFilledMarketOrder(parsed_event['order_id'], parsed_event)
-            asyncio.sleep(5)
+            await asyncio.sleep(5)
             new_order_group_id = db.get_group_id_by_order(parsed_event['order_id'])
             if new_order_group_id:
                 db.insertNewTrade(new_order_group_id, parsed_event)
             else: # This catches the case where I just insert an MO, for test for instance, which an accompanying order_id is not found 
-                logging.info("No group_id found for order, inserting a new entry in order_groups table")
-                new_group_id = db.get_latest_group_id()
-                new_group_id = 999999999
+                logging.info("No group_id found for order, inserting a into order_groups with group_id = NONE")
+                new_group_id = None
                 db.insertNewOrderGroup(new_group_id, parsed_event)
                 db.insertNewTrade(new_group_id, parsed_event)
         elif parsed_event['type'] != "MARKET" and parsed_event['status'] == "FILLED":
