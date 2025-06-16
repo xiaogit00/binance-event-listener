@@ -131,7 +131,7 @@ def findByIdAndCancel(order_id, order_data):
         print("There's an issue updating supabase table: ", e)
 
 def insertNewTrade(group_id, order_data):
-    logging.info("Attempting to insert new trade into DB...")
+    logging.info(f"Attempting to insert new trade into DB with group_id: {group_id}, order_data: {order_data}")
     try:
         newTrade = {
             "group_id": group_id,
@@ -145,6 +145,7 @@ def insertNewTrade(group_id, order_data):
             "realized_pnl": None,# This is entered only upon exit
             "is_closed": False 
         }
+        logging.info(f"New trade object: {newTrade}")
         res = (
             supabase.table("trades")
             .insert(newTrade)
