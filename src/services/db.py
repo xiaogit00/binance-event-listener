@@ -282,7 +282,7 @@ def does_BE_exist_for_order_group(group_id) -> bool:
             .eq("type", "BE")
             .execute()
         )
-        if not res.data: # len 0 array
+        if not res.data: # len 0 array -> this could also happen if group_id doesn't contain any trades !! potential source of bug
             logging.info(f"BE doesn't exist for res: {res}")
             return False
         else:

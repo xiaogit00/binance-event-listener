@@ -51,9 +51,14 @@ class TestDB(unittest.TestCase):
     # def test_find_remaining_order(self):
     #     res = db.find_remaining_order(0,"SL")
     #     print(res)
-    def test_does_BE_exist_for_order_group(self):
-        res = db.does_BE_exist_for_order_group(37)
-        print(res)
+    # def test_does_BE_exist_for_order_group(self):
+    #     res = db.does_BE_exist_for_order_group(100)
+    #     print(res)
+    def test_remaining_orders_logic(self):
+        is_stop_market = False
+        BE_exists = True
+        remaining_order = "TP" if is_stop_market else ("BE" if BE_exists else "SL") 
+        print(remaining_order)
 
 if __name__ == '__main__':
     asyncio.run(unittest.main())
