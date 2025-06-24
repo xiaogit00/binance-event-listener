@@ -255,7 +255,7 @@ def insertNewOrderGroup(new_group_id, order_data) -> Optional[int]:
         print("There's an issue getting supabase table: ", e)
 
 def find_remaining_order(group_id, remaining_order):
-    logging.info(f"Trying to remaining order_id of type {remaining_order} by group_id: {group_id}")
+    logging.info(f"Trying to get remaining order_id of type {remaining_order} by group_id: {group_id}")
     
     try:
         res = (
@@ -271,3 +271,22 @@ def find_remaining_order(group_id, remaining_order):
         return res.data[0]['order_id']
     except Exception as e: 
         print("There's an issue getting one order from supabase: ", e)
+
+def does_BE_exist_for_order_group(group_id) -> bool:
+    logging.info(f"Trying to see if BE exists for group_id: {group_id}")
+    try:
+        res = (
+            supabase.table("order_groups")
+            .select("*")
+            .eq("group_id", group_id)
+            .eq("type", "BE")
+            .execute()
+        )
+        if not res.data: # len 0 array
+            logging.info(f"BE doesn't exist for res: {res}")
+            return False
+        else:
+            logging.info(f"BE exists for res: {res}")
+            return True
+    except Exception as e: 
+        logging.error(f"There's an issue getting one order from supabase: {e}")
