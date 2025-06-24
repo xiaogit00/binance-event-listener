@@ -174,12 +174,13 @@ def get_entry_price_for_trade(group_id):
 
 def updateTrade(group_id, order_data):
     logging.info("Attempting to update trade...")
+    direction = order_data['direction']
     try:
-        entry_price = get_entry_price_for_trade(group_id)
+        entry_price = float(get_entry_price_for_trade(group_id))
         updated_trade = {
             "exit_time":str(datetime.fromtimestamp(order_data["updated_at"]/1000)),
             "exit_price":order_data['filled_price'],
-            "realized_pnl":round((float(order_data['filled_price']) - entry_price)/entry_price, 3),
+            "realized_pnl":round((float(order_data['filled_price']) - entry_price) * float(order_data['qty']), 2) if direction == 'LONG' else round(-(float(order_data['filled_price']) - entry_price) * float(order_data['qty']), 2),
             "is_closed": True,
         }
         res = (

@@ -33,15 +33,15 @@ class TestDB(unittest.TestCase):
     #     logger.init_logger()
     #     res = db.get_group_id_by_order(123504619285)
     #     print(res == True)
-    def test_insert_new_trade(self):
-        res = db.insertNewTrade(-2, event_samples.newParsedFilledMarketOrder())
-        print(res)
+    # def test_insert_new_trade(self):
+    #     res = db.insertNewTrade(-3, event_samples.newParsedFilledMarketOrder())
+    #     print(res)
     # def test_get_entry_price_for_trade(self):
     #     res = db.get_entry_price_for_trade(1)
     #     print(res)
-    # def test_update_trade(self):
-    #     res = db.updateTrade(1, event_samples.newParsedFilledSLOrder())
-    #     print(res)
+    def test_update_trade(self):
+        res = db.updateTrade(-3, event_samples.newParsedFilledSLOrder())
+        print(res)
     # def test_get_latest_group_id(self):
     #     res = db.get_latest_group_id()
     #     print(res)
