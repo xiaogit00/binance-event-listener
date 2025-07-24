@@ -101,10 +101,10 @@ def newParsedFilledMarketOrder():
     "order_id": 5,
     "status": "FILLED",
     "symbol": "SOLUSDT",
-    "side": "BUY",
+    "side": "SELL",
     "type": "MARKET",
-    "qty": "0.09",
-    "direction": "LONG",
+    "qty": "3",
+    "direction": "SHORT",
     "ask_price": "156.5",
     "filled_price": "156.5",
     "updated_at": 1749013292798
@@ -158,10 +158,10 @@ def newParsedSLOrder():
     "order_id": 6,
     "status": "NEW",
     "symbol": "SOLUSDT",
-    "side": "SELL",
+    "side": "BUY",
     "type": "STOP_MARKET",
-    "qty": "0.09", 
-    "direction": "LONG",
+    "qty": "3", 
+    "direction": "SHORT",
     "created_at": 1749037471697,
     "ask_price": "155.7"
 }
@@ -214,10 +214,10 @@ def newParsedFilledSLOrder():
     "order_id": 6,
     "status": "FILLED",
     "symbol": "SOLUSDT",
-    "side": "SELL",
+    "side": "BUY",
     "type": "STOP_MARKET",
-    "qty": "0.09",
-    "direction": "LONG",
+    "qty": "3",
+    "direction": "SHORT",
     "filled_price": "156.02",
     "updated_at": 1749038674248
 }

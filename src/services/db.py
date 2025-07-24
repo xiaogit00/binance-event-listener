@@ -6,16 +6,20 @@ import logging
 from typing import Optional
 
 
+
 from datetime import datetime
 
 load_dotenv()
 supabase = get_supabase_client()
+orders_table = "orders" if os.getenv("STRATEGY_ENV") == 1 else "orders2"
+order_groups_table = "order_groups" if os.getenv("STRATEGY_ENV") == 1 else "order_groups2"
+trades_table = "trades" if os.getenv("STRATEGY_ENV") == 1 else "trades2"
 
 def get_one_order(order_id):
     """Gets one order"""
     try:
         res = (
-            supabase.table("orders")
+            supabase.table(orders_table)
             .select("*")
             .eq("order_id", order_id)
             .execute()
@@ -28,7 +32,7 @@ def get_orders():
     """Get all orders"""
     try:
         res = (
-            supabase.table("orders")
+            supabase.table(orders_table)
             .select("*")
             .execute()
         )
@@ -40,7 +44,7 @@ def delete_orders():
     """Get all orders"""
     try:
         res = (
-            supabase.table("orders")
+            supabase.table(orders_table)
             .delete()
             .neq("order_id", 0)
             .execute()
@@ -66,7 +70,7 @@ def insertNewOrderByType(order_type, order_data):
             "updated_at": None,
         }
         res = (
-            supabase.table("orders")
+            supabase.table(orders_table)
             .insert(newOrder)
             .execute()
         )
@@ -85,7 +89,7 @@ def findByIdAndUpdateFilledMarketOrder(order_id, order_data):
             "updated_at": str(datetime.fromtimestamp(order_data["updated_at"]/1000)),
         }
         res = (
-            supabase.table("orders")
+            supabase.table(orders_table)
             .update(updated_market_order)
             .eq("order_id", order_id)
             .execute()
@@ -103,7 +107,7 @@ def findByIdAndUpdateFilledSLTPOrder(order_id, order_data):
             "updated_at": str(datetime.fromtimestamp(order_data["updated_at"]/1000)),
         }
         res = (
-            supabase.table("orders")
+            supabase.table(orders_table)
             .update(updated_sltp_order)
             .eq("order_id", order_id)
             .execute()
@@ -120,7 +124,7 @@ def findByIdAndCancel(order_id, order_data):
     print(f"Attempting to UPDATE order {order_id} to CANCELED")
     try:
         res = (
-            supabase.table("orders")
+            supabase.table(orders_table)
             .update({"status": order_data['status'], "updated_at": str(datetime.fromtimestamp(order_data["updated_at"]/1000))})
             .eq("order_id", order_id)
             .execute()
@@ -130,7 +134,7 @@ def findByIdAndCancel(order_id, order_data):
         print("There's an issue updating supabase table: ", e)
 
 def insertNewTrade(group_id, order_data):
-    logging.info("Attempting to insert new trade into DB...")
+    logging.info(f"Attempting to insert new trade into DB with group_id: {group_id}, order_data: {order_data}")
     try:
         newTrade = {
             "group_id": group_id,
@@ -144,8 +148,9 @@ def insertNewTrade(group_id, order_data):
             "realized_pnl": None,# This is entered only upon exit
             "is_closed": False 
         }
+        logging.info(f"New trade object: {newTrade}")
         res = (
-            supabase.table("trades")
+            supabase.table(trades_table)
             .insert(newTrade)
             .execute()
         )
@@ -158,7 +163,7 @@ def insertNewTrade(group_id, order_data):
 def get_entry_price_for_trade(group_id):
     try:
         res = (
-            supabase.table("trades")
+            supabase.table(trades_table)
             .select("*")
             .eq("group_id", group_id)
             .execute()
@@ -171,16 +176,17 @@ def get_entry_price_for_trade(group_id):
 
 def updateTrade(group_id, order_data):
     logging.info("Attempting to update trade...")
+    direction = order_data['direction']
     try:
-        entry_price = get_entry_price_for_trade(group_id)
+        entry_price = float(get_entry_price_for_trade(group_id))
         updated_trade = {
             "exit_time":str(datetime.fromtimestamp(order_data["updated_at"]/1000)),
             "exit_price":order_data['filled_price'],
-            "realized_pnl":round((float(order_data['filled_price']) - entry_price)/entry_price, 3),
+            "realized_pnl":round((float(order_data['filled_price']) - entry_price) * float(order_data['qty']), 2) if direction == 'LONG' else round(-(float(order_data['filled_price']) - entry_price) * float(order_data['qty']), 2),
             "is_closed": True,
         }
         res = (
-            supabase.table("trades")
+            supabase.table(trades_table)
             .update(updated_trade)
             .eq("group_id", group_id)
             .execute()
@@ -196,7 +202,7 @@ def get_latest_group_id() -> Optional[int]:
     logging.info("Trying to get the latest group_id")
     try:
         res = (
-            supabase.table("order_groups")
+            supabase.table(order_groups_table)
             .select("group_id", count="exact")
             .order("group_id", desc=True)
             .limit(1)
@@ -215,7 +221,7 @@ def get_group_id_by_order(order_id) -> Optional[int]:
     logging.info(f"Trying to get latest group_id by order: {order_id}")
     try:
         res = (
-            supabase.table("order_groups")
+            supabase.table(order_groups_table)
             .select("*")
             .eq("order_id", order_id)
             .execute()
@@ -228,7 +234,6 @@ def get_group_id_by_order(order_id) -> Optional[int]:
         print("There's an issue getting one order from supabase: ", e)
 
 def insertNewOrderGroup(new_group_id, order_data) -> Optional[int]:
-    logging.info("Trying to insert a new order_group record")
     group_data = {
                     "group_id": new_group_id,
                     "order_id": order_data['order_id'],
@@ -238,9 +243,10 @@ def insertNewOrderGroup(new_group_id, order_data) -> Optional[int]:
                     "breakeven_threshold": None,
                     "created_at": str(datetime.fromtimestamp(order_data["updated_at"]/1000))
                     }
+    logging.info(f"Trying to insert a new order_group record with params: {group_data}")
     try:
         res = (
-            supabase.table("order_groups")
+            supabase.table(order_groups_table)
             .insert(group_data)
             .execute()
         )
@@ -251,11 +257,11 @@ def insertNewOrderGroup(new_group_id, order_data) -> Optional[int]:
         print("There's an issue getting supabase table: ", e)
 
 def find_remaining_order(group_id, remaining_order):
-    logging.info(f"Trying to remaining order_id of type {remaining_order} by group_id: {group_id}")
+    logging.info(f"Trying to get remaining order_id of type {remaining_order} by group_id: {group_id}")
     
     try:
         res = (
-            supabase.table("order_groups")
+            supabase.table(order_groups_table)
             .select("*")
             .eq("group_id", group_id)
             .eq("type", remaining_order)
@@ -267,3 +273,22 @@ def find_remaining_order(group_id, remaining_order):
         return res.data[0]['order_id']
     except Exception as e: 
         print("There's an issue getting one order from supabase: ", e)
+
+def does_BE_exist_for_order_group(group_id) -> bool:
+    logging.info(f"Trying to see if BE exists for group_id: {group_id}")
+    try:
+        res = (
+            supabase.table(order_groups_table)
+            .select("*")
+            .eq("group_id", group_id)
+            .eq("type", "BE")
+            .execute()
+        )
+        if not res.data: # len 0 array -> this could also happen if group_id doesn't contain any trades !! potential source of bug
+            logging.info(f"BE doesn't exist for res: {res}")
+            return False
+        else:
+            logging.info(f"BE exists for res: {res}")
+            return True
+    except Exception as e: 
+        logging.error(f"There's an issue getting one order from supabase: {e}")
