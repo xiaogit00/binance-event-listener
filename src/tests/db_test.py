@@ -25,7 +25,7 @@ class TestDB(unittest.TestCase):
     #     db.insertNewOrderByType("STOP_MARKET", event_samples.newParsedSLOrder())
     #     db.findByIdAndUpdateFilledSLTPOrder("6", event_samples.newParsedFilledSLOrder())
     # def test_find_order_and_cancel(self):
-    #     db.findByIdAndCancel(2, event_samples.newParsedCancelOrder())
+    #     db.findByIdAndCancel(6, event_samples.newParsedCancelOrder())
     # def test_get_one_order(self):
     #     res = db.get_one_order('6')
     #     print(res)
@@ -33,11 +33,11 @@ class TestDB(unittest.TestCase):
     #     logger.init_logger()
     #     res = db.get_group_id_by_order(123504619285)
     #     print(res == True)
-    def test_insert_new_trade(self):
-        res = db.insertNewTrade(-3, event_samples.newParsedFilledMarketOrder())
-        print(res)
+    # def test_insert_new_trade(self):
+    #     res = db.insertNewTrade(-3, event_samples.newParsedFilledMarketOrder())
+    #     print(res)
     # def test_get_entry_price_for_trade(self):
-    #     res = db.get_entry_price_for_trade(1)
+    #     res = db.get_entry_price_for_trade(-3)
     #     print(res)
     # def test_update_trade(self):
     #     res = db.updateTrade(-3, event_samples.newParsedFilledSLOrder())

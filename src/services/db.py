@@ -12,9 +12,9 @@ from datetime import datetime
 
 load_dotenv()
 supabase = get_supabase_client()
-orders_table = "orders" if os.getenv("STRATEGY_ENV") == 1 else "orders2"
-order_groups_table = "order_groups" if os.getenv("STRATEGY_ENV") == 1 else "order_groups2"
-trades_table = "trades" if os.getenv("STRATEGY_ENV") == 1 else "trades2"
+orders_table = "orders" if int(os.getenv("STRATEGY_ENV")) == 1 else "orders2"
+order_groups_table = "order_groups" if int(os.getenv("STRATEGY_ENV")) == 1 else "order_groups2"
+trades_table = "trades" if int(os.getenv("STRATEGY_ENV")) == 1 else "trades2"
 
 def get_one_order(order_id):
     """Gets one order"""
