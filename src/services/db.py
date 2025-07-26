@@ -1,5 +1,4 @@
 import os
-import psycopg2
 from dotenv import load_dotenv
 from src.services.db_connection import get_connection
 from src.utils.supabase_client import get_supabase_client
@@ -179,11 +178,20 @@ def updateTrade(group_id, order_data):
     logging.info("Attempting to update trade...")
     direction = order_data['direction']
     try:
+        market_fee = 0.0005
+        limit_fee = 0.0002
         entry_price = float(get_entry_price_for_trade(group_id))
+        exit_price = float(order_data['filled_price'])
+        order_type = order_data['type'] # # MARKET / TAKE_PROFIT / STOP_MARKET
+        qty = float(order_data['qty'])
+        fee = (entry_price * qty * market_fee) + (exit_price * qty * (limit_fee if order_type == "TAKE_PROFIT" else market_fee))
+        realized_pnl_without_fee = (exit_price - entry_price) * qty if direction == 'LONG' else -(exit_price - entry_price) * qty
+        realized_pnl = round(realized_pnl_without_fee - fee, 2)
+
         updated_trade = {
             "exit_time":str(datetime.fromtimestamp(order_data["updated_at"]/1000)),
             "exit_price":order_data['filled_price'],
-            "realized_pnl":round((float(order_data['filled_price']) - entry_price) * float(order_data['qty']), 2) if direction == 'LONG' else round(-(float(order_data['filled_price']) - entry_price) * float(order_data['qty']), 2),
+            "realized_pnl":realized_pnl,
             "is_closed": True,
         }
         res = (
