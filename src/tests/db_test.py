@@ -39,9 +39,9 @@ class TestDB(unittest.TestCase):
     # def test_get_entry_price_for_trade(self):
     #     res = db.get_entry_price_for_trade(-3)
     #     print(res)
-    # def test_update_trade(self):
-    #     res = db.updateTrade(-3, event_samples.newParsedFilledSLOrder())
-    #     print(res)
+    def test_update_trade(self):
+        res = db.updateTrade(-3, event_samples.newParsedFilledSLOrder())
+        print(res)
     # def test_get_latest_group_id(self):
     #     res = db.get_latest_group_id()
     #     print(res)
@@ -54,11 +54,11 @@ class TestDB(unittest.TestCase):
     # def test_does_BE_exist_for_order_group(self):
     #     res = db.does_BE_exist_for_order_group(100)
     #     print(res)
-    def test_remaining_orders_logic(self):
-        is_stop_market = False
-        BE_exists = True
-        remaining_order = "TP" if is_stop_market else ("BE" if BE_exists else "SL") 
-        print(remaining_order)
+    # def test_remaining_orders_logic(self):
+    #     is_stop_market = False
+    #     BE_exists = True
+    #     remaining_order = "TP" if is_stop_market else ("BE" if BE_exists else "SL") 
+    #     print(remaining_order)
 
 if __name__ == '__main__':
     asyncio.run(unittest.main())

@@ -186,7 +186,7 @@ def updateTrade(group_id, order_data):
         qty = float(order_data['qty'])
         fee = (entry_price * qty * market_fee) + (exit_price * qty * (limit_fee if order_type == "TAKE_PROFIT" else market_fee))
         realized_pnl_without_fee = (exit_price - entry_price) * qty if direction == 'LONG' else -(exit_price - entry_price) * qty
-        realized_pnl = round(realized_pnl_without_fee - fee, 2)
+        realized_pnl = round(realized_pnl_without_fee - fee, 3)
 
         updated_trade = {
             "exit_time":str(datetime.fromtimestamp(order_data["updated_at"]/1000)),
