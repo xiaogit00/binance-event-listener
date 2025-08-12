@@ -26,7 +26,9 @@ async def main():
             db.findByIdAndCancel(parsed_event['order_id'], parsed_event) 
 
         elif parsed_event['status'] == "NEW": # New Order
-            db.insertNewOrderByType(parsed_event["type"] ,parsed_event) 
+            order_exists = db.get_one_order(parsed_event['order_id']).data
+            if not order_exists:
+                db.insertNewOrderByType(parsed_event["type"] ,parsed_event) 
 
         elif parsed_event['type'] == "MARKET" and parsed_event['status'] == "FILLED":
             db.findByIdAndUpdateFilledMarketOrder(parsed_event['order_id'], parsed_event)
@@ -47,15 +49,10 @@ async def main():
                 raise
             BE_exists = db.does_BE_exist_for_order_group(group_id)
             remaining_order = "TP" if parsed_event['type'] == "STOP_MARKET" else ("BE" if BE_exists else "SL") 
-            if new_order_group_id:
-                db.updateTrade(group_id, parsed_event)
-                remaining_order_id = db.find_remaining_order(group_id, remaining_order)
-                binanceREST.cancel_orders(parsed_event["symbol"], remaining_order_id)
-            else: # This catches the case where I just insert an SL/TP, for test for instance, which an accompanying order_id is not found 
-                logging.info("No group_id found for order, inserting a new entry in order_groups table")
-                new_group_id = db.get_latest_group_id()
-                new_group_id = new_group_id + 1 if new_group_id else 0
-                db.insertNewOrderGroup(new_group_id, parsed_event)
+            db.updateTrade(group_id, parsed_event)
+            remaining_order_id = db.find_remaining_order(group_id, remaining_order)
+            binanceREST.cancel_orders(parsed_event["symbol"], remaining_order_id)
+
 
 
 

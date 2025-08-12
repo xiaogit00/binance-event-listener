@@ -54,7 +54,8 @@ def delete_orders():
         print("There's an issue updating supabase table: ", e)
 
 def insertNewOrderByType(order_type, order_data):
-    logging.info("Attempting to insert new order into DB...")
+    logging.info(f"✏️ Attempting to insert new order into DB... Order Type: {order_type}")
+    logging.info(f"Order Data: {order_data}")
     try:
         newOrder = {
             "order_id":order_data["order_id"],
@@ -80,7 +81,7 @@ def insertNewOrderByType(order_type, order_data):
 
         
 def findByIdAndUpdateFilledMarketOrder(order_id, order_data):
-    logging.info(f"Attempting to UPDATE order {order_id} to FILLED")
+    logging.info(f"✏️ Attempting to UPDATE order {order_id} to FILLED")
     try:
         updated_market_order = {
             "status":order_data["status"],
@@ -99,7 +100,7 @@ def findByIdAndUpdateFilledMarketOrder(order_id, order_data):
         print("There's an issue updating supabase table: ", e)
 
 def findByIdAndUpdateFilledSLTPOrder(order_id, order_data):
-    logging.info(f"Attempting to UPDATE order {order_id} to FILLED")
+    logging.info(f"✏️ Attempting to UPDATE order {order_id} to FILLED")
     try:
         updated_sltp_order = {
             "status":order_data["status"],
@@ -121,7 +122,7 @@ def findByIdAndCancel(order_id, order_data):
     '''
     Updates the status of the order to be cancelled
     '''
-    print(f"Attempting to UPDATE order {order_id} to CANCELED")
+    print(f"✏️ Attempting to UPDATE order {order_id} to CANCELED")
     try:
         res = (
             supabase.table(orders_table)
@@ -134,7 +135,7 @@ def findByIdAndCancel(order_id, order_data):
         print("There's an issue updating supabase table: ", e)
 
 def insertNewTrade(group_id, order_data):
-    logging.info(f"Attempting to insert new trade into DB with group_id: {group_id}, order_data: {order_data}")
+    logging.info(f"✏️ Attempting to insert new trade into DB with group_id: {group_id}, order_data: {order_data}")
     try:
         newTrade = {
             "group_id": group_id,
@@ -175,7 +176,7 @@ def get_entry_price_for_trade(group_id):
         print("There's an issue getting one order from supabase: ", e)
 
 def updateTrade(group_id, order_data):
-    logging.info("Attempting to update trade...")
+    logging.info(f"✏️ Attempting to update trade with group_id {group_id}...")
     direction = order_data['direction']
     try:
         market_fee = 0.0005
@@ -208,7 +209,7 @@ def updateTrade(group_id, order_data):
 
 
 def get_latest_group_id() -> Optional[int]:
-    logging.info("Trying to get the latest group_id")
+    logging.info("✏️ Trying to get the latest group_id")
     try:
         res = (
             supabase.table(order_groups_table)
@@ -227,7 +228,7 @@ def get_latest_group_id() -> Optional[int]:
     
 
 def get_group_id_by_order(order_id) -> Optional[int]:
-    logging.info(f"Trying to get latest group_id by order: {order_id}")
+    logging.info(f"✏️ Trying to get latest group_id by order: {order_id}")
     try:
         res = (
             supabase.table(order_groups_table)
@@ -252,7 +253,7 @@ def insertNewOrderGroup(new_group_id, order_data) -> Optional[int]:
                     "breakeven_threshold": None,
                     "created_at": str(datetime.fromtimestamp(order_data["updated_at"]/1000))
                     }
-    logging.info(f"Trying to insert a new order_group record with params: {group_data}")
+    logging.info(f"✏️ Trying to insert a new order_group record with params: {group_data}")
     try:
         res = (
             supabase.table(order_groups_table)
@@ -266,7 +267,7 @@ def insertNewOrderGroup(new_group_id, order_data) -> Optional[int]:
         print("There's an issue getting supabase table: ", e)
 
 def find_remaining_order(group_id, remaining_order):
-    logging.info(f"Trying to get remaining order_id of type {remaining_order} by group_id: {group_id}")
+    logging.info(f"✏️ Trying to get remaining order_id of type {remaining_order} by group_id: {group_id}")
     
     try:
         res = (
@@ -284,7 +285,7 @@ def find_remaining_order(group_id, remaining_order):
         print("There's an issue getting one order from supabase: ", e)
 
 def does_BE_exist_for_order_group(group_id) -> bool:
-    logging.info(f"Trying to see if BE exists for group_id: {group_id}")
+    logging.info(f"✏️ Trying to see if BE exists for group_id: {group_id}")
     try:
         res = (
             supabase.table(order_groups_table)

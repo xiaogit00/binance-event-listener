@@ -26,9 +26,9 @@ class TestDB(unittest.TestCase):
     #     db.findByIdAndUpdateFilledSLTPOrder("6", event_samples.newParsedFilledSLOrder())
     # def test_find_order_and_cancel(self):
     #     db.findByIdAndCancel(6, event_samples.newParsedCancelOrder())
-    # def test_get_one_order(self):
-    #     res = db.get_one_order('6')
-    #     print(res)
+    def test_get_one_order(self):
+        order_exists = db.get_one_order('132378507131').data
+        print(bool(order_exists))
     # def test_get_group_id_by_order(self):
     #     logger.init_logger()
     #     res = db.get_group_id_by_order(123504619285)
@@ -39,9 +39,9 @@ class TestDB(unittest.TestCase):
     # def test_get_entry_price_for_trade(self):
     #     res = db.get_entry_price_for_trade(-3)
     #     print(res)
-    def test_update_trade(self):
-        res = db.updateTrade(-3, event_samples.newParsedFilledSLOrder())
-        print(res)
+    # def test_update_trade(self):
+    #     res = db.updateTrade(-3, event_samples.newParsedFilledSLOrder())
+    #     print(res)
     # def test_get_latest_group_id(self):
     #     res = db.get_latest_group_id()
     #     print(res)
