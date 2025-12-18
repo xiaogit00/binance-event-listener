@@ -185,7 +185,7 @@ def updateTrade(group_id, order_data):
         exit_price = float(order_data['filled_price'])
         order_type = order_data['type'] # # MARKET / TAKE_PROFIT / STOP_MARKET
         qty = float(order_data['qty'])
-        fee = (entry_price * qty * market_fee) + (exit_price * qty * (limit_fee if order_type == "TAKE_PROFIT" else market_fee))
+        fee = (entry_price * qty * market_fee) + (exit_price * qty * market_fee)
         realized_pnl_without_fee = (exit_price - entry_price) * qty if direction == 'LONG' else -(exit_price - entry_price) * qty
         realized_pnl = round(realized_pnl_without_fee - fee, 3)
 
@@ -194,6 +194,7 @@ def updateTrade(group_id, order_data):
             "exit_price":order_data['filled_price'],
             "realized_pnl":realized_pnl,
             "is_closed": True,
+            "fees": fee
         }
         res = (
             supabase.table(trades_table)
