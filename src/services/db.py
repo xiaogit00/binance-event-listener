@@ -99,7 +99,7 @@ def findByIdAndUpdateFilledMarketOrder(order_id, order_data):
     except Exception as e: 
         print("There's an issue updating supabase table: ", e)
 
-def findByIdAndUpdateFilledSLTPOrder(order_id, order_data):
+def findByIdAndUpdateFilledSLOrder(order_id, order_data):
     logging.info(f"✏️ Attempting to UPDATE order {order_id} to FILLED")
     try:
         updated_sltp_order = {

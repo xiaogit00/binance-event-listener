@@ -42,20 +42,12 @@ async def main():
                 db.insertNewTrade(new_group_id, parsed_event)
                 new_group_id -= 1
         elif parsed_event['type'] != "MARKET" and parsed_event['status'] == "FILLED":
-            db.findByIdAndUpdateFilledSLTPOrder(parsed_event['order_id'], parsed_event) 
+            db.findByIdAndUpdateFilledSLOrder(parsed_event['order_id'], parsed_event) 
             group_id = db.get_group_id_by_order(parsed_event['order_id'])
             if not group_id:
                 logging.critical("Fatal: no group_id found, stopping program.") # Insert notif here.
                 raise
-            BE_exists = db.does_BE_exist_for_order_group(group_id)
-            remaining_order = "TP" if parsed_event['type'] == "STOP_MARKET" else ("BE" if BE_exists else "SL") 
             db.updateTrade(group_id, parsed_event)
-            remaining_order_id = db.find_remaining_order(group_id, remaining_order)
-            binanceREST.cancel_orders(parsed_event["symbol"], remaining_order_id)
-
-
-
-
 
 asyncio.run(main())
 
