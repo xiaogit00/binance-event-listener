@@ -2,7 +2,6 @@ import logging, asyncio
 from src.services import binanceWebsocket, binanceREST
 import src.event_handler as EventHandler
 from src.utils.logger import init_logger
-import event_handler as EventHandler
 from src.services import db
 
 async def main():
