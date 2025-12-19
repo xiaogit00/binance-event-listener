@@ -11,9 +11,9 @@ from datetime import datetime
 
 load_dotenv()
 supabase = get_supabase_client()
-orders_table = "orders" if int(os.getenv("STRATEGY_ENV")) == 1 else "orders2"
-order_groups_table = "order_groups" if int(os.getenv("STRATEGY_ENV")) == 1 else "order_groups2"
-trades_table = "trades" if int(os.getenv("STRATEGY_ENV")) == 1 else "trades2"
+orders_table = "orders"
+order_groups_table = "order_groups"
+trades_table = "trades"
 
 def get_one_order(order_id):
     """Gets one order"""
@@ -147,7 +147,8 @@ def insertNewTrade(group_id, order_data):
             "exit_price":None, # This is entered only upon exit
             "qty": order_data["qty"],
             "realized_pnl": None,# This is entered only upon exit
-            "is_closed": False 
+            "is_closed": False,
+            "fees": None # This is entered only upon exit
         }
         logging.info(f"New trade object: {newTrade}")
         res = (
@@ -250,8 +251,10 @@ def insertNewOrderGroup(new_group_id, order_data) -> Optional[int]:
                     "order_id": order_data['order_id'],
                     "type": "MO",
                     "direction": order_data['direction'],
-                    "breakeven_price": None,
-                    "breakeven_threshold": None,
+                    "current_stop_loss": None,
+                    "trailing_value": None,
+                    "trailing_price": None,
+                    "next_stoploss_price": None,
                     "created_at": str(datetime.fromtimestamp(order_data["updated_at"]/1000))
                     }
     logging.info(f"✏️ Trying to insert a new order_group record with params: {group_data}")
