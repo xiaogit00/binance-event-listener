@@ -1,4 +1,4 @@
-from src.services import binance as binanceAPI
+from src.services import binanceAPI 
 import requests
 
 import unittest
@@ -12,8 +12,11 @@ class TestBinanceAPI(unittest.TestCase):
     #     res = binanceAPI.execute_market_order("SOLUSDT", "LONG", 0.09, 155.5, 5)
     #     print(res)
     def test_execute_stop_loss_order(self):
-        res = binanceAPI.execute_stop_loss_order("SOLUSDT", "LONG", 153.02, 5)
+        res = binanceAPI.execute_stop_loss_order("SOLUSDT", 136.12, 0.04)
         print(res)
+    # def test_cancel_orders(self):
+    #     res = binanceAPI.cancel_algo_orders("SOLUSDT", "1000000332992900")
+    #     print(res)
     # def test_execute_take_profit_order(self):
     #    binanceAPI.execute_take_profit_order("SOLUSDT", "LONG", 156.10, 0.09, 1)
     # async def test_fetch_candle_ws(self):

@@ -1,3 +1,19 @@
+def newTradeLite():
+    return {
+    "e": "TRADE_LITE",
+    "E": 1749013292798,
+    "T": 1749013292798,
+    "s": "SOLUSDT",
+    "q": "0.09", 
+    "p": "0.0000",
+    "m": False,
+    "c": "fOPYqvypuFM2LKJ3ihzKFZ", 
+    "S": "BUY",
+    "L": "156.5000",
+    "l": "0.09",
+    "t": 2369436085,
+    "i": 121058809222
+}
 def newMarketOrder():
     return {
     "e": "ORDER_TRADE_UPDATE",
@@ -40,6 +56,37 @@ def newMarketOrder():
         "gtd": 0
     }
 }
+
+def newAccountUpdate():
+    return {
+    "e": "ACCOUNT_UPDATE",
+    "T": 1749013292798,
+    "E": 1749013292798,
+    "a": { 
+            "B": [
+                {
+                    "a": "USDT", 
+                    "wb": "0.21843288", 
+                    "cw": "0.21843288", 
+                    "bc": "0" 
+                }
+            ],
+            "P": [ 
+                {"s": "SOLUSDT", 
+                    "pa": "0.09",
+                    "ep": "156.5",
+                    "cr": "0.35020001",
+                    "up": "-0.00824514",
+                    "mt": "cross",
+                    "iw": "0",
+                    "ps": "BOTH",
+                    "ma": "USDT",
+                    "bep": "156.57825"
+                }
+            ],
+            "m": "ORDER"
+        }
+    }
 
 def newFilledMarketOrder():
     return {
@@ -110,6 +157,129 @@ def newParsedFilledMarketOrder():
     "updated_at": 1749013292798
 }
 
+def newAlgoSLOrder():
+    return {
+    "e": "ALGO_UPDATE",
+    "T": 1768015698681,
+    "E": 1768015698682,
+    "o": {
+        "caid": "qtpsw3w8FLiEcues3KRbae",
+        "aid": 1000000333505502,
+        "at": "CONDITIONAL",
+        "o": "STOP_MARKET",
+        "s": "SOLUSDT",
+        "S": "SELL",
+        "ps": "BOTH",
+        "f": "GTC",
+        "q": "0.04",
+        "X": "NEW",
+        "ai": "",
+        "tp": "136.12",
+        "p": "0",
+        "V": "EXPIRE_MAKER",
+        "wt": "CONTRACT_PRICE",
+        "pm": "NONE",
+        "cp": False,
+        "pP": False,
+        "R": True,
+        "tt": 0,
+        "gtd": 0
+    }
+}
+
+def newTriggeringAlgoSLOrder():
+    return {
+    "e": "ALGO_UPDATE",
+    "T": 1768015729352,
+    "E": 1768015729353,
+    "o": {
+        "caid": "qtpsw3w8FLiEcues3KRbae",
+        "aid": 1000000333505502,
+        "at": "CONDITIONAL",
+        "o": "STOP_MARKET",
+        "s": "SOLUSDT",
+        "S": "SELL",
+        "ps": "BOTH",
+        "f": "GTC",
+        "q": "0.04",
+        "X": "TRIGGERING",
+        "ai": "",
+        "tp": "136.12",
+        "p": "0",
+        "V": "EXPIRE_MAKER",
+        "wt": "CONTRACT_PRICE",
+        "pm": "NONE",
+        "cp": False,
+        "pP": False,
+        "R": True,
+        "tt": 1768015729352,
+        "gtd": 0
+    }
+}
+
+def newFilledAlgoSLOrder():
+    return {
+    "e": "ALGO_UPDATE",
+    "T": 1768015729360,
+    "E": 1768015729360,
+    "o": {
+        "caid": "qtpsw3w8FLiEcues3KRbae",
+        "aid": 1000000333505502,
+        "at": "CONDITIONAL",
+        "o": "STOP_MARKET",
+        "s": "SOLUSDT",
+        "S": "SELL",
+        "ps": "BOTH",
+        "f": "GTC",
+        "q": "0.04",
+        "X": "FINISHED",
+        "ai": "188463665892",
+        "ap": "136.12",
+        "aq": "0.04",
+        "act": "MARKET",
+        "tp": "136.12",
+        "p": "0",
+        "V": "EXPIRE_MAKER",
+        "wt": "CONTRACT_PRICE",
+        "pm": "NONE",
+        "cp": False,
+        "pP": False,
+        "R": True,
+        "tt": 1768015729352,
+        "gtd": 0
+    }
+}
+
+def newCanceledSLOrder():
+    return {
+    "e": "ALGO_UPDATE",
+    "T": 1768014907127,
+    "E": 1768014907127,
+    "o": {
+        "caid": "1P4xTv4U5Fr3KI2PFOejPn",
+        "aid": 1000000332992900,
+        "at": "CONDITIONAL",
+        "o": "STOP_MARKET",
+        "s": "SOLUSDT",
+        "S": "SELL",
+        "ps": "BOTH",
+        "f": "GTC",
+        "q": "0.05",
+        "X": "CANCELED",
+        "ai": "",
+        "tp": "100.02",
+        "p": "0",
+        "V": "EXPIRE_MAKER",
+        "wt": "CONTRACT_PRICE",
+        "pm": "NONE",
+        "cp": False,
+        "pP": False,
+        "R": False,
+        "tt": 0,
+        "gtd": 0
+    }
+}
+
 def newSLOrder():
     return {
     "e": "ORDER_TRADE_UPDATE",
@@ -165,6 +335,8 @@ def newParsedSLOrder():
     "created_at": 1749037471697,
     "ask_price": "155.7"
 }
+
+
 
 def newFilledSLOrder():
     return {
@@ -276,3 +448,4 @@ def newParsedCancelOrder():
     "direction": "LONG",
     "updated_at": 1749008243657
 }
+

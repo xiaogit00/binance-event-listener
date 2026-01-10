@@ -8,6 +8,11 @@ class TestDB(unittest.TestCase):
     # def test_delete_orders(self):
     #     res = db.delete_orders()
     #     print(res)
+    def test_delete_all(self):
+        res = db.delete_orders()
+        res2 = db.delete_order_groups()
+        res3 = db.delete_trades()
+        print(res, res2, res3)
     # def test_get_orders(self):
     #     res = db.get_orders()
     #     print(res)
@@ -15,20 +20,20 @@ class TestDB(unittest.TestCase):
     #     res = db.insertNewOrderByType("MARKET", event_samples.newParsedMarketOrder())
     #     print(res)
     # def test_update_filled_market_order(self):
-    #     db.insertNewOrderByType("MARKET", event_samples.newParsedMarketOrder())
+    #     # db.insertNewOrderByType("MARKET", event_samples.newParsedMarketOrder())
     #     db.findByIdAndUpdateFilledMarketOrder("5", event_samples.newParsedFilledMarketOrder())
     # def test_insert_new_SL_order(self):
     #     db.delete_orders()
     #     res = db.insertNewOrderByType("STOP_MARKET", event_samples.newParsedSLOrder())
     #     print(res)
-    # def test_insert_new_SL_order(self):
-    #     db.insertNewOrderByType("STOP_MARKET", event_samples.newParsedSLOrder())
-    #     db.findByIdAndUpdateFilledSLTPOrder("6", event_samples.newParsedFilledSLOrder())
+    # def test_insert_filled_SL_order(self):
+    #     # db.insertNewOrderByType("STOP_MARKET", event_samples.newParsedSLOrder())
+    #     db.findByIdAndUpdateFilledSLOrder("6", event_samples.newParsedFilledSLOrder())
     # def test_find_order_and_cancel(self):
     #     db.findByIdAndCancel(6, event_samples.newParsedCancelOrder())
-    def test_get_one_order(self):
-        order_exists = db.get_one_order('132378507131').data
-        print(bool(order_exists))
+    # def test_get_one_order(self):
+    #     order_exists = db.get_one_order('132378507131').data
+    #     print(bool(order_exists))
     # def test_get_group_id_by_order(self):
     #     logger.init_logger()
     #     res = db.get_group_id_by_order(123504619285)

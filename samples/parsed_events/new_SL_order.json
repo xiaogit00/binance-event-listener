@@ -1,0 +1,11 @@
+{
+    "order_id": 1000000333505502,
+    "status": "NEW",
+    "symbol": "SOLUSDT",
+    "side": "SELL",
+    "type": "STOP_MARKET",
+    "qty": "0.04",
+    "direction": "LONG",
+    "created_at": 1768015698681,
+    "ask_price": "136.12"
+}

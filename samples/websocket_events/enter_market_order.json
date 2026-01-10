@@ -4,10 +4,10 @@
     "E": 1749013292798,
     "T": 1749013292798,
     "s": "SOLUSDT",
-    "q": "0.09",
+    "q": "0.09", //Qty
     "p": "0.0000",
     "m": False,
-    "c": "fOPYqvypuFM2LKJ3ihzKFZ",
+    "c": "fOPYqvypuFM2LKJ3ihzKFZ", // client ID
     "S": "BUY",
     "L": "156.5000",
     "l": "0.09",
@@ -100,7 +100,7 @@
         "f": "GTC",
         "q": "0.09",
         "p": "0",
-        "ap": "156.5",
+        "ap": "156.5", // Average price
         "sp": "0",
         "x": "TRADE",
         "X": "FILLED",
@@ -128,4 +128,54 @@
         "pm": "NONE",
         "gtd": 0
     }
+}
+
+//Docs:
+{
+  "e":"ORDER_TRADE_UPDATE",		   // Event Type
+  "E":1568879465651,			       // Event Time
+  "T":1568879465650,			       // Transaction Time
+  "o":{								
+    "s":"BTCUSDT",			         // Symbol
+    "c":"TEST",				           // Client Order Id
+      // special client order id:
+      // starts with "autoclose-": liquidation order
+      // "adl_autoclose": ADL auto close order
+      // "settlement_autoclose-": settlement order for delisting or delivery
+    "S":"SELL",					         // Side
+    "o":"TRAILING_STOP_MARKET",	 // Order Type
+    "f":"GTC",					         // Time in Force
+    "q":"0.001",				         // Original Quantity
+    "p":"0",					           // Original Price
+    "ap":"0",					           // Average Price
+    "sp":"7103.04",				       // Stop Price. Please ignore with TRAILING_STOP_MARKET order
+    "x":"NEW",					         // Execution Type
+    "X":"NEW",					         // Order Status
+    "i":8886774,				         // Order Id
+    "l":"0",					           // Order Last Filled Quantity
+    "z":"0",					           // Order Filled Accumulated Quantity
+    "L":"0",					           // Last Filled Price
+    "N":"USDT",            	     // Commission Asset
+    "n":"0",               	     // Commission
+    "T":1568879465650,			     // Order Trade Time
+    "t":0,			        	       // Trade Id
+    "b":"0",			    	         // Bids Notional
+    "a":"9.91",					         // Ask Notional
+    "m":false,					         // Is this trade the maker side?
+    "R":false,					         // Is this reduce only
+    "wt":"CONTRACT_PRICE", 		   // Stop Price Working Type
+    "ot":"TRAILING_STOP_MARKET", // Original Order Type
+    "ps":"LONG",					       // Position Side
+    "cp":false,						       // If Close-All, pushed with conditional order
+    "AP":"7476.89",				       // Activation Price, only puhed with TRAILING_STOP_MARKET order
+    "cr":"5.0",					         // Callback Rate, only puhed with TRAILING_STOP_MARKET order
+    "pP": false,                 // If price protection is turned on
+    "si": 0,                     // ignore
+    "ss": 0,                     // ignore
+    "rp":"0",	   					       // Realized Profit of the trade
+    "V":"EXPIRE_TAKER",          // STP mode
+    "pm":"OPPONENT",             // Price match mode
+    "gtd":0,                     // TIF GTD order auto cancel time
+    "er":"0"                     // Expiry Reason
+  }
 }

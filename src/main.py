@@ -1,5 +1,5 @@
 import logging, asyncio
-from src.services import binanceWebsocket, binanceREST
+from src.services import binanceAPI, binanceWebsocket
 import src.event_handler as EventHandler
 from src.utils.logger import init_logger
 from src.services import db
@@ -14,13 +14,11 @@ async def main():
         new_binance_event = await binance_event_queue.get()
         logging.info("🔴 Awaiting next event in queue from Binance event websocket...")
         logging.info(f"😱 Received new Binance event! Event: {new_binance_event}")
-        event_type = new_binance_event['e']
-
-        if event_type != "ORDER_TRADE_UPDATE": # Ignoring all other event types
-            continue
 
         parsed_event = EventHandler.event_parser(new_binance_event)
-
+        if not parsed_event: continue # For skipped events
+        
+        # The following are all DB updates based on event triggered
         if parsed_event['status'] == "CANCELED": # UPDATE CANCELLED FIRST
             db.findByIdAndCancel(parsed_event['order_id'], parsed_event) 
 
@@ -29,7 +27,7 @@ async def main():
             if not order_exists:
                 db.insertNewOrderByType(parsed_event["type"] ,parsed_event) 
 
-        elif parsed_event['type'] == "MARKET" and parsed_event['status'] == "FILLED":
+        elif parsed_event['type'] == "MARKET" and parsed_event['status'] == "FILLED": # Filled MO
             db.findByIdAndUpdateFilledMarketOrder(parsed_event['order_id'], parsed_event)
             await asyncio.sleep(5)
             new_order_group_id = db.get_group_id_by_order(parsed_event['order_id'])
@@ -40,7 +38,7 @@ async def main():
                 db.insertNewOrderGroup(new_group_id, parsed_event)
                 db.insertNewTrade(new_group_id, parsed_event)
                 new_group_id -= 1
-        elif parsed_event['type'] != "MARKET" and parsed_event['status'] == "FILLED":
+        elif parsed_event['type'] == "STOP_MARKET" and parsed_event['status'] == "FILLED": 
             db.findByIdAndUpdateFilledSLOrder(parsed_event['order_id'], parsed_event) 
             group_id = db.get_group_id_by_order(parsed_event['order_id'])
             if not group_id:

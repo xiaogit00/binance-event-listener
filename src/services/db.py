@@ -11,9 +11,10 @@ from datetime import datetime
 
 load_dotenv()
 supabase = get_supabase_client()
-orders_table = "orders"
-order_groups_table = "order_groups"
-trades_table = "trades"
+env = os.getenv("ENV")
+orders_table = "orders" if env=="prod" else "test_orders"
+order_groups_table = "order_groups" if env=="prod" else "test_order_groups"
+trades_table = "trades" if env=="prod" else "test_trades"
 
 def get_one_order(order_id):
     """Gets one order"""
@@ -41,7 +42,20 @@ def get_orders():
         print("There's an issue getting supabase table: ", e)
 
 def delete_orders():
-    """Get all orders"""
+    """Delete all orders"""
+    try:
+        res = (
+            supabase.table(order_groups_table)
+            .delete()
+            .neq("order_id", 0)
+            .execute()
+        )
+        return res
+    except Exception as e: 
+        print("There's an issue updating supabase table: ", e)
+
+def delete_order_groups():
+    """Delete all order groups"""
     try:
         res = (
             supabase.table(orders_table)
@@ -53,6 +67,19 @@ def delete_orders():
     except Exception as e: 
         print("There's an issue updating supabase table: ", e)
 
+def delete_trades():
+    """Delete all trades table"""
+    try:
+        res = (
+            supabase.table(trades_table)
+            .delete()
+            .neq("group_id", 0)
+            .execute()
+        )
+        return res
+    except Exception as e: 
+        print("There's an issue updating supabase table: ", e)
+        
 def insertNewOrderByType(order_type, order_data):
     logging.info(f"✏️ Attempting to insert new order into DB... Order Type: {order_type}")
     logging.info(f"Order Data: {order_data}")
@@ -102,14 +129,14 @@ def findByIdAndUpdateFilledMarketOrder(order_id, order_data):
 def findByIdAndUpdateFilledSLOrder(order_id, order_data):
     logging.info(f"✏️ Attempting to UPDATE order {order_id} to FILLED")
     try:
-        updated_sltp_order = {
+        updated_sl_order = {
             "status":order_data["status"],
             "filled_price":order_data['filled_price'],
             "updated_at": str(datetime.fromtimestamp(order_data["updated_at"]/1000)),
         }
         res = (
             supabase.table(orders_table)
-            .update(updated_sltp_order)
+            .update(updated_sl_order)
             .eq("order_id", order_id)
             .execute()
         )

@@ -1,0 +1,322 @@
+// https://developers.binance.com/docs/derivatives/usds-margined-futures/user-data-streams/Event-Algo-Order-Update
+
+// New Stoploss Order
+{
+    "e": "ALGO_UPDATE",
+    "T": 1768015698681,
+    "E": 1768015698682,
+    "o": {
+        "caid": "qtpsw3w8FLiEcues3KRbae",
+        "aid": 1000000333505502,
+        "at": "CONDITIONAL",
+        "o": "STOP_MARKET",
+        "s": "SOLUSDT",
+        "S": "SELL",
+        "ps": "BOTH",
+        "f": "GTC",
+        "q": "0.04",
+        "X": "NEW",
+        "ai": "",
+        "tp": "136.12",
+        "p": "0",
+        "V": "EXPIRE_MAKER",
+        "wt": "CONTRACT_PRICE",
+        "pm": "NONE",
+        "cp": False,
+        "pP": False,
+        "R": True,
+        "tt": 0,
+        "gtd": 0
+    }
+}
+//TRIGGERING
+{
+    "e": "ALGO_UPDATE",
+    "T": 1768015729352,
+    "E": 1768015729353,
+    "o": {
+        "caid": "qtpsw3w8FLiEcues3KRbae",
+        "aid": 1000000333505502,
+        "at": "CONDITIONAL",
+        "o": "STOP_MARKET",
+        "s": "SOLUSDT",
+        "S": "SELL",
+        "ps": "BOTH",
+        "f": "GTC",
+        "q": "0.04",
+        "X": "TRIGGERING",
+        "ai": "",
+        "tp": "136.12",
+        "p": "0",
+        "V": "EXPIRE_MAKER",
+        "wt": "CONTRACT_PRICE",
+        "pm": "NONE",
+        "cp": False,
+        "pP": False,
+        "R": True,
+        "tt": 1768015729352,
+        "gtd": 0
+    }
+}
+
+{
+    "e": "TRADE_LITE",
+    "E": 1768015729353,
+    "T": 1768015729353,
+    "s": "SOLUSDT",
+    "q": "0.04",
+    "p": "0.0000",
+    "m": False,
+    "c": "qtpsw3w8FLiEcues3KRbae",
+    "S": "SELL",
+    "L": "136.1200",
+    "l": "0.04",
+    "t": 3068308024,
+    "i": 188463665892
+}
+// This seems to send a new Order also?
+{
+    "e": "ORDER_TRADE_UPDATE",
+    "T": 1768015729353,
+    "E": 1768015729353,
+    "o": {
+        "s": "SOLUSDT",
+        "c": "qtpsw3w8FLiEcues3KRbae",
+        "S": "SELL",
+        "o": "MARKET",
+        "f": "GTC",
+        "q": "0.04",
+        "p": "0",
+        "ap": "0",
+        "sp": "0", //But the price here is empty - should I just ignore? 
+        "x": "NEW",
+        "X": "NEW",
+        "i": 188463665892,
+        "l": "0",
+        "z": "0",
+        "L": "0",
+        "n": "0",
+        "N": "USDT",
+        "T": 1768015729353,
+        "t": 0,
+        "b": "0",
+        "a": "0",
+        "m": False,
+        "R": True,
+        "wt": "CONTRACT_PRICE",
+        "ot": "MARKET",
+        "ps": "BOTH",
+        "cp": False,
+        "rp": "0",
+        "pP": False,
+        "si": 1000000333505502,
+        "ss": -1,
+        "st": "ALGO_CONDITION",
+        "V": "EXPIRE_MAKER",
+        "pm": "NONE",
+        "gtd": 0,
+        "er": "0"
+    }
+}
+
+{
+    "e": "ACCOUNT_UPDATE",
+    "T": 1768015729353,
+    "E": 1768015729353,
+    "a": {
+        "B": [
+            {
+                "a": "USDT",
+                "wb": "1821.77367252",
+                "cw": "1821.77367252",
+                "bc": "0"
+            }
+        ],
+        "P": [
+            {
+                "s": "SOLUSDT",
+                "pa": "0",
+                "ep": "0",
+                "cr": "739.43699972",
+                "up": "0",
+                "mt": "cross",
+                "iw": "0",
+                "ps": "BOTH",
+                "ma": "USDT",
+                "bep": "0"
+            }
+        ],
+        "m": "ORDER"
+    }
+}
+
+//Order Filled - this seems to still work though. It's like both websocket events are present. 
+{
+    "e": "ORDER_TRADE_UPDATE",
+    "T": 1768015729353,
+    "E": 1768015729353,
+    "o": {
+        "s": "SOLUSDT",
+        "c": "qtpsw3w8FLiEcues3KRbae",
+        "S": "SELL",
+        "o": "MARKET",
+        "f": "GTC",
+        "q": "0.04",
+        "p": "0",
+        "ap": "136.12",
+        "sp": "0",
+        "x": "TRADE",
+        "X": "FILLED",
+        "i": 188463665892,
+        "l": "0.04",
+        "z": "0.04",
+        "L": "136.12",
+        "n": "0.0027224",
+        "N": "USDT",
+        "T": 1768015729353,
+        "t": 3068308024,
+        "b": "0",
+        "a": "0",
+        "m": False,
+        "R": True,
+        "wt": "CONTRACT_PRICE",
+        "ot": "MARKET",
+        "ps": "BOTH",
+        "cp": False,
+        "rp": "0.0024",
+        "pP": False,
+        "si": 1000000333505502,
+        "ss": -1,
+        "st": "ALGO_CONDITION",
+        "V": "EXPIRE_MAKER",
+        "pm": "NONE",
+        "gtd": 0,
+        "er": "0"
+    }
+}
+
+{
+    "e": "ALGO_UPDATE",
+    "T": 1768015729355,
+    "E": 1768015729355,
+    "o": {
+        "caid": "qtpsw3w8FLiEcues3KRbae",
+        "aid": 1000000333505502,
+        "at": "CONDITIONAL",
+        "o": "STOP_MARKET",
+        "s": "SOLUSDT",
+        "S": "SELL",
+        "ps": "BOTH",
+        "f": "GTC",
+        "q": "0.04",
+        "X": "TRIGGERED",
+        "ai": "188463665892",
+        "ap": "0",
+        "aq": "0",
+        "act": "MARKET",
+        "tp": "136.12",
+        "p": "0",
+        "V": "EXPIRE_MAKER",
+        "wt": "CONTRACT_PRICE",
+        "pm": "NONE",
+        "cp": False,
+        "pP": False,
+        "R": True,
+        "tt": 1768015729352,
+        "gtd": 0
+    }
+}
+
+{
+    "e": "ALGO_UPDATE",
+    "T": 1768015729360,
+    "E": 1768015729360,
+    "o": {
+        "caid": "qtpsw3w8FLiEcues3KRbae",
+        "aid": 1000000333505502,
+        "at": "CONDITIONAL",
+        "o": "STOP_MARKET",
+        "s": "SOLUSDT",
+        "S": "SELL",
+        "ps": "BOTH",
+        "f": "GTC",
+        "q": "0.04",
+        "X": "FINISHED",
+        "ai": "188463665892",
+        "ap": "136.12",
+        "aq": "0.04",
+        "act": "MARKET",
+        "tp": "136.12",
+        "p": "0",
+        "V": "EXPIRE_MAKER",
+        "wt": "CONTRACT_PRICE",
+        "pm": "NONE",
+        "cp": False,
+        "pP": False,
+        "R": True,
+        "tt": 1768015729352,
+        "gtd": 0
+    }
+}
+//Cancelled SL Order
+{
+    "e": "ALGO_UPDATE",
+    "T": 1768014907127,
+    "E": 1768014907127,
+    "o": {
+        "caid": "1P4xTv4U5Fr3KI2PFOejPn",
+        "aid": 1000000332992900,
+        "at": "CONDITIONAL",
+        "o": "STOP_MARKET",
+        "s": "SOLUSDT",
+        "S": "SELL",
+        "ps": "BOTH",
+        "f": "GTC",
+        "q": "0.05",
+        "X": "CANCELED",
+        "ai": "",
+        "tp": "100.02",
+        "p": "0",
+        "V": "EXPIRE_MAKER",
+        "wt": "CONTRACT_PRICE",
+        "pm": "NONE",
+        "cp": False,
+        "pP": False,
+        "R": False,
+        "tt": 0,
+        "gtd": 0
+    }
+}
+// Official Docs
+{
+    "e": "ALGO_UPDATE", // Event Type
+    "T": 1750515742297, // Event Time
+    "E": 1750515742303, // Transaction Time
+    "o": {
+        "caid": "Q5xaq5EGKgXXa0fD7fs0Ip", // Client Algo Id
+        "aid": 2148719, // Algo Id
+        "at": "CONDITIONAL", // Algo Type
+        "o": "TAKE_PROFIT", //Order Type
+        "s": "BNBUSDT", //Symbol
+        "S": "SELL", //Side
+        "ps": "BOTH", //Position Side
+        "f": "GTC", //Time in force
+        "q": "0.01", //quantity
+        "X": "CANCELED", //Algo status
+        "ai": "", // order id
+        "ap": "0.00000", // avg fill price in matching engine, only display when order is triggered and placed in matching engine
+        "aq": "0.00000", // execuated quantity in matching engine, only display when order is triggered and placed in matching engine
+        "act": "0", // actual order type in matching engine, only display when order is triggered and placed in matching engine
+        "tp": "750", //Trigger price
+        "p": "750", //Order Price
+        "V": "EXPIRE_MAKER", //STP mode
+        "wt": "CONTRACT_PRICE", //Working type
+        "pm": "NONE", // Price match mode
+        "cp": false, //If Close-All
+        "pP": false, //If price protection is turned on
+        "R": false, // Is this reduce only
+        "tt": 0, //Trigger time
+        "gtd": 0, // good till time for GTD time in force
+        "rm": "Reduce Only reject" // algo order failed reason
+    }
+}

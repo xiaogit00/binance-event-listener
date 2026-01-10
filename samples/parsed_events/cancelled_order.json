@@ -1,0 +1,10 @@
+{
+    "order_id": 1000000332992900,
+    "status": "CANCELED",
+    "symbol": "SOLUSDT",
+    "side": "SELL",
+    "type": "STOP_MARKET",
+    "qty": "0.05",
+    "direction": "LONG",
+    "updated_at": 1768014907127
+}
