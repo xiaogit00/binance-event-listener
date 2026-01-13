@@ -11,6 +11,8 @@ async def main():
     asyncio.create_task(binanceWebsocket.websocket_binance_event_listener(binance_event_queue)) # Creates a background task. 
     asyncio.create_task(binanceWebsocket.keep_listen_key_alive())
     while True:
+        group_id = get_latest_group_id(supabase_url=supabase_url, api_key=supabase_api_key, jwt=supbase_jwt)
+        group_id += 1    
         new_binance_event = await binance_event_queue.get()
         logging.info("🔴 Awaiting next event in queue from Binance event websocket...")
         logging.info(f"😱 Received new Binance event! Event: {new_binance_event}")
@@ -26,6 +28,19 @@ async def main():
             order_exists = db.get_one_order(parsed_event['order_id']).data
             if not order_exists:
                 db.insertNewOrderByType(parsed_event["type"] ,parsed_event) 
+                candle_data = db.getCandleData(parsed_event['order_id'])
+                last_low, trailing_value, trailing_price, next_stoploss_price = calculateTrailingValue(candle_data, parsed_event)
+                order_groups_data = {
+                    "group_id": group_id,
+                    "order_id": parsed_event['order_id'],
+                    "type": parsed_event['type'],
+                    "direction": parsed_event['direction'],
+                    "current_stop_loss": last_low,
+                    "trailing_value": trailing_value,
+                    "trailing_price": trailing_price,
+                    "next_stoploss_price": next_stoploss_price
+                }
+                db.insertNewOrderGroup(group_id, order_groups_data)
 
         elif parsed_event['type'] == "MARKET" and parsed_event['status'] == "FILLED": # Filled MO
             db.findByIdAndUpdateFilledMarketOrder(parsed_event['order_id'], parsed_event)
