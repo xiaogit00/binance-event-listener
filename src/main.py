@@ -32,6 +32,7 @@ async def main():
             if not order_exists:
                 db.insertNewOrderByType(parsed_event["type"] ,parsed_event) 
                 #INSERTING INTO ORDER_GROUPS DB
+                candle_data = db.getCandleData(parsed_event['order_id']) if env == 'prod' else db.getCandleData(2222)
                 group_id = int(candle_data['group_id'])
                 order_groups_data = {
                     "group_id": group_id,
