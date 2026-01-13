@@ -31,6 +31,19 @@ async def main():
             order_exists = db.get_one_order(parsed_event['order_id']).data
             if not order_exists:
                 db.insertNewOrderByType(parsed_event["type"] ,parsed_event) 
+                #INSERTING INTO ORDER_GROUPS DB
+                group_id = int(candle_data['group_id'])
+                order_groups_data = {
+                    "group_id": group_id,
+                    "order_id": parsed_event['order_id'],
+                    "type": parsed_event['type'],
+                    "direction": parsed_event['direction'],
+                    "current_stop_loss": None,
+                    "trailing_value": None,
+                    "trailing_price": None,
+                    "next_stoploss_price": None
+                }
+                db.insertNewOrderGroup(group_id, order_groups_data) 
         
         elif parsed_event['status'] == "NEW" and parsed_event['type'] == "STOP_MARKET": # New Market Order
             order_exists = db.get_one_order(parsed_event['order_id']).data
@@ -54,21 +67,6 @@ async def main():
 
         elif parsed_event['type'] == "MARKET" and parsed_event['status'] == "FILLED": # Filled MO
             db.findByIdAndUpdateFilledMarketOrder(parsed_event['order_id'], parsed_event)
-            actual_entry_price = parsed_event['filled_price']
-            candle_data = db.getCandleData(parsed_event['order_id']) if env == 'prod' else db.getCandleData(1111)
-            group_id = int(candle_data['group_id'])
-            current_stop_loss, trailing_value, trailing_price, next_stoploss_price = calculateTrailingValue(candle_data,parsed_event['direction'] , float(actual_entry_price))
-            order_groups_data = {
-                "group_id": group_id,
-                "order_id": parsed_event['order_id'],
-                "type": parsed_event['type'],
-                "direction": parsed_event['direction'],
-                "current_stop_loss": current_stop_loss,
-                "trailing_value": trailing_value,
-                "trailing_price": trailing_price,
-                "next_stoploss_price": next_stoploss_price
-            }
-            db.insertNewOrderGroup(group_id, order_groups_data) 
             db.insertNewTrade(group_id, parsed_event)
 
         elif parsed_event['type'] == "STOP_MARKET" and parsed_event['status'] == "FILLED": 
