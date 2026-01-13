@@ -15,6 +15,7 @@ env = os.getenv("ENV")
 orders_table = "orders" if env=="prod" else "test_orders"
 order_groups_table = "order_groups" if env=="prod" else "test_order_groups"
 trades_table = "trades" if env=="prod" else "test_trades"
+candles_table = "candles" if env=="prod" else "test_candles"
 
 def get_one_order(order_id):
     """Gets one order"""
@@ -45,7 +46,7 @@ def delete_orders():
     """Delete all orders"""
     try:
         res = (
-            supabase.table(order_groups_table)
+            supabase.table(orders_table)
             .delete()
             .neq("order_id", 0)
             .execute()
@@ -58,7 +59,7 @@ def delete_order_groups():
     """Delete all order groups"""
     try:
         res = (
-            supabase.table(orders_table)
+            supabase.table(order_groups_table)
             .delete()
             .neq("order_id", 0)
             .execute()
@@ -274,23 +275,12 @@ def get_group_id_by_order(order_id) -> Optional[int]:
     except Exception as e: 
         print("There's an issue getting one order from supabase: ", e)
 
-def insertNewOrderGroup(new_group_id, order_data) -> Optional[int]:
-    group_data = {
-                    "group_id": new_group_id,
-                    "order_id": order_data['order_id'],
-                    "type": "MO",
-                    "direction": order_data['direction'],
-                    "current_stop_loss": None,
-                    "trailing_value": None,
-                    "trailing_price": None,
-                    "next_stoploss_price": None,
-                    "created_at": str(datetime.fromtimestamp(order_data["updated_at"]/1000))
-                    }
-    logging.info(f"✏️ Trying to insert a new order_group record with params: {group_data}")
+def insertNewOrderGroup(new_group_id, order_group_data) -> Optional[int]:
+    logging.info(f"✏️ Trying to insert a new order_group record with params: {order_group_data}")
     try:
         res = (
             supabase.table(order_groups_table)
-            .insert(group_data)
+            .insert(order_group_data)
             .execute()
         )
         if res.data:
@@ -335,3 +325,20 @@ def does_BE_exist_for_order_group(group_id) -> bool:
             return True
     except Exception as e: 
         logging.error(f"There's an issue getting one order from supabase: {e}")
+
+def getCandleData(order_id) -> Optional[int]:
+    logging.info(f"✏️ Trying to get candle data by order: {order_id}")
+    try:
+        res = (
+            supabase.table(candles_table)
+            .select("*")
+            .eq("order_id", order_id)
+            .execute()
+        )
+        if not res.data:
+            logging.info(f"No associated candle found for order_id: {order_id}")
+            return None
+        logging.info(f'Returning {res.data[0]} from get_group_id_by_order function')
+        return res.data[0]
+    except Exception as e: 
+        print("There's an issue getting one order from supabase: ", e)

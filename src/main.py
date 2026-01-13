@@ -2,17 +2,20 @@ import logging, asyncio
 from src.services import binanceAPI, binanceWebsocket
 import src.event_handler as EventHandler
 from src.utils.logger import init_logger
+from src.utils.calcs import calculateTrailingValue
 from src.services import db
+from dotenv import load_dotenv
+import os
 
 async def main():
+    load_dotenv()
+    env = os.getenv("ENV")
+
     init_logger()
-    new_group_id = -1
     binance_event_queue = asyncio.Queue()
     asyncio.create_task(binanceWebsocket.websocket_binance_event_listener(binance_event_queue)) # Creates a background task. 
     asyncio.create_task(binanceWebsocket.keep_listen_key_alive())
     while True:
-        group_id = get_latest_group_id(supabase_url=supabase_url, api_key=supabase_api_key, jwt=supbase_jwt)
-        group_id += 1    
         new_binance_event = await binance_event_queue.get()
         logging.info("🔴 Awaiting next event in queue from Binance event websocket...")
         logging.info(f"😱 Received new Binance event! Event: {new_binance_event}")
@@ -24,42 +27,52 @@ async def main():
         if parsed_event['status'] == "CANCELED": # UPDATE CANCELLED FIRST
             db.findByIdAndCancel(parsed_event['order_id'], parsed_event) 
 
-        elif parsed_event['status'] == "NEW": # New Order
+        elif parsed_event['status'] == "NEW" and parsed_event['type'] == "MARKET": # New Market Order
             order_exists = db.get_one_order(parsed_event['order_id']).data
             if not order_exists:
                 db.insertNewOrderByType(parsed_event["type"] ,parsed_event) 
-                candle_data = db.getCandleData(parsed_event['order_id'])
-                last_low, trailing_value, trailing_price, next_stoploss_price = calculateTrailingValue(candle_data, parsed_event)
+        
+        elif parsed_event['status'] == "NEW" and parsed_event['type'] == "STOP_MARKET": # New Market Order
+            order_exists = db.get_one_order(parsed_event['order_id']).data
+            if not order_exists:
+                db.insertNewOrderByType(parsed_event["type"] ,parsed_event) 
+                actual_entry_price = parsed_event['ask_price'] # because it's an SL order, the ask price will be equal to its filled price
+                candle_data = db.getCandleData(parsed_event['order_id']) if env == 'prod' else db.getCandleData(2222)
+                group_id = int(candle_data['group_id'])
+                current_stop_loss, trailing_value, trailing_price, next_stoploss_price = calculateTrailingValue(candle_data,parsed_event['direction'] , float(actual_entry_price))
                 order_groups_data = {
                     "group_id": group_id,
                     "order_id": parsed_event['order_id'],
                     "type": parsed_event['type'],
                     "direction": parsed_event['direction'],
-                    "current_stop_loss": last_low,
+                    "current_stop_loss": current_stop_loss,
                     "trailing_value": trailing_value,
                     "trailing_price": trailing_price,
                     "next_stoploss_price": next_stoploss_price
                 }
-                db.insertNewOrderGroup(group_id, order_groups_data)
+                db.insertNewOrderGroup(group_id, order_groups_data) # INSERTING ORDER GROUP HERE ON NEW SL ORDER BECAUSE ACTUAL ENTRY PRICE CAN BE DERIVED; in contrast, MO's actual entry price is only emitted in FILLED event. 
 
         elif parsed_event['type'] == "MARKET" and parsed_event['status'] == "FILLED": # Filled MO
             db.findByIdAndUpdateFilledMarketOrder(parsed_event['order_id'], parsed_event)
-            await asyncio.sleep(10) # this exists because trade-executer executes MO, then sleeps 3 seconds before polling binance API for actual entry price (this is to ensure API is ready). Only after this will Iggy's service input group_order, after which the next line can query it.
-            new_order_group_id = db.get_group_id_by_order(parsed_event['order_id'])
-            if new_order_group_id is not None and new_order_group_id>=0:
-                db.insertNewTrade(new_order_group_id, parsed_event)
-            else: # This catches the case where I just insert an MO, for test for instance, which an accompanying order_id is not found 
-                logging.info(f"No group_id found for order, inserting a new order_groups with group_id = {new_group_id}")
-                logging.info("Potential edge case? - Current flow doesn't work if events happen within 10 seconds due to various sleeps.")
-                db.insertNewOrderGroup(new_group_id, parsed_event)
-                db.insertNewTrade(new_group_id, parsed_event)
-                new_group_id -= 1
+            actual_entry_price = parsed_event['filled_price']
+            candle_data = db.getCandleData(parsed_event['order_id']) if env == 'prod' else db.getCandleData(1111)
+            group_id = int(candle_data['group_id'])
+            current_stop_loss, trailing_value, trailing_price, next_stoploss_price = calculateTrailingValue(candle_data,parsed_event['direction'] , float(actual_entry_price))
+            order_groups_data = {
+                "group_id": group_id,
+                "order_id": parsed_event['order_id'],
+                "type": parsed_event['type'],
+                "direction": parsed_event['direction'],
+                "current_stop_loss": current_stop_loss,
+                "trailing_value": trailing_value,
+                "trailing_price": trailing_price,
+                "next_stoploss_price": next_stoploss_price
+            }
+            db.insertNewOrderGroup(group_id, order_groups_data) 
+            db.insertNewTrade(group_id, parsed_event)
+
         elif parsed_event['type'] == "STOP_MARKET" and parsed_event['status'] == "FILLED": 
             db.findByIdAndUpdateFilledSLOrder(parsed_event['order_id'], parsed_event) 
-            group_id = db.get_group_id_by_order(parsed_event['order_id'])
-            if not group_id:
-                logging.critical("Fatal: no group_id found, stopping program.") # Insert notif here.
-                raise
             db.updateTrade(group_id, parsed_event)
 
 asyncio.run(main())
