@@ -265,9 +265,11 @@ def get_group_id_by_order(order_id) -> Optional[int]:
             .eq("order_id", order_id)
             .execute()
         )
+        logging.info(f"All order_groups found from DB:", res)
         if not res.data:
             logging.info(f"No associated group_id found for order_id: {order_id}")
             return None
+        logging.info(f'Returning {res.data[0]['group_id']} from get_group_id_by_order function')
         return res.data[0]['group_id']
     except Exception as e: 
         print("There's an issue getting one order from supabase: ", e)

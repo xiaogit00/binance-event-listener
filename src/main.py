@@ -29,12 +29,13 @@ async def main():
 
         elif parsed_event['type'] == "MARKET" and parsed_event['status'] == "FILLED": # Filled MO
             db.findByIdAndUpdateFilledMarketOrder(parsed_event['order_id'], parsed_event)
-            await asyncio.sleep(5)
+            await asyncio.sleep(10) # this exists because trade-executer executes MO, then sleeps 3 seconds before polling binance API for actual entry price (this is to ensure API is ready). Only after this will Iggy's service input group_order, after which the next line can query it.
             new_order_group_id = db.get_group_id_by_order(parsed_event['order_id'])
-            if new_order_group_id:
+            if new_order_group_id is not None and new_order_group_id>=0:
                 db.insertNewTrade(new_order_group_id, parsed_event)
             else: # This catches the case where I just insert an MO, for test for instance, which an accompanying order_id is not found 
                 logging.info(f"No group_id found for order, inserting a new order_groups with group_id = {new_group_id}")
+                logging.info("Potential edge case? - Current flow doesn't work if events happen within 10 seconds due to various sleeps.")
                 db.insertNewOrderGroup(new_group_id, parsed_event)
                 db.insertNewTrade(new_group_id, parsed_event)
                 new_group_id -= 1
