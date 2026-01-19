@@ -23,6 +23,7 @@ async def keep_listen_key_alive():
 def get_listen_key():
     url = f"{baseUrl}/fapi/v1/listenKey"
     headers = {'X-MBX-APIKEY': os.getenv("BINANCE_API_KEY")}
+    logging.info(f"apikey:", os.getenv("BINANCE_API_KEY"))
     response = requests.post(url, headers=headers)
     try:
         response.raise_for_status()
