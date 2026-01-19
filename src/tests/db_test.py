@@ -8,11 +8,11 @@ class TestDB(unittest.TestCase):
     # def test_delete_orders(self):
     #     res = db.delete_orders()
     #     print(res)
-    # def test_delete_all(self):
-    #     res = db.delete_orders()
-    #     res2 = db.delete_order_groups()
-    #     res3 = db.delete_trades()
-    #     print(res, res2, res3)
+    def test_delete_all(self):
+        res = db.delete_orders()
+        res2 = db.delete_order_groups()
+        res3 = db.delete_trades()
+        print(res, res2, res3)
     # def test_get_orders(self):
     #     res = db.get_orders()
     #     print(res)
@@ -34,10 +34,10 @@ class TestDB(unittest.TestCase):
     # def test_get_one_order(self):
     #     order_exists = db.get_one_order('132378507131').data
     #     print(bool(order_exists))
-    def test_get_group_id_by_order(self):
-        # logger.init_logger()
-        res = db.get_group_id_by_order('188999740044')
-        print(res)
+    # def test_get_group_id_by_order(self):
+    #     # logger.init_logger()
+    #     res = db.get_group_id_by_order('188999740044')
+    #     print(res)
     # def test_insert_new_trade(self):
     #     res = db.insertNewTrade(-3, event_samples.newParsedFilledMarketOrder())
     #     print(res)
@@ -64,8 +64,10 @@ class TestDB(unittest.TestCase):
     #     BE_exists = True
     #     remaining_order = "TP" if is_stop_market else ("BE" if BE_exists else "SL") 
     #     print(remaining_order)
+    # def test_get_candle_data(self):
+    #     res = db.getCandleData(188999740044)
+    #     print(res)
 
 if __name__ == '__main__':
     asyncio.run(unittest.main())
-
 

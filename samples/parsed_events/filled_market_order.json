@@ -1,0 +1,12 @@
+{
+    "order_id": 188999740044,
+    "status": "FILLED",
+    "symbol": "SOLUSDT",
+    "side": "BUY",
+    "type": "MARKET",
+    "qty": "3",
+    "direction": "LONG",
+    "ask_price": "139.43",
+    "filled_price": "139.43",
+    "updated_at": 1768266582821
+}
