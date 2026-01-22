@@ -6,6 +6,7 @@ from src.utils.calcs import calculateTrailingValue
 from src.services import db
 from dotenv import load_dotenv
 import os
+import time
 
 async def main():
     load_dotenv()
@@ -32,6 +33,7 @@ async def main():
             if not order_exists:
                 db.insertNewOrderByType(parsed_event["type"] ,parsed_event) 
                 #INSERTING INTO ORDER_GROUPS DB
+                time.sleep(5) # Catch case: Binance latency in MO OR DB latency, which results in candle data not being inserted
                 candle_data = db.getCandleData(parsed_event['order_id']) if env == 'prod' else db.getCandleData(2222)
                 group_id = int(candle_data['group_id'])
                 order_groups_data = {
@@ -50,6 +52,7 @@ async def main():
             order_exists = db.get_one_order(parsed_event['order_id']).data
             if not order_exists:
                 db.insertNewOrderByType(parsed_event["type"] ,parsed_event) 
+                time.sleep(5)
                 actual_entry_price = parsed_event['ask_price'] # because it's an SL order, the ask price will be equal to its filled price
                 candle_data = db.getCandleData(parsed_event['order_id']) if env == 'prod' else db.getCandleData(2222)
                 group_id = int(candle_data['group_id'])
