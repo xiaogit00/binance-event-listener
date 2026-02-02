@@ -52,7 +52,7 @@ async def main():
             order_exists = db.get_one_order(parsed_event['order_id']).data
             if not order_exists:
                 db.insertNewOrderByType(parsed_event["type"] ,parsed_event) 
-                actual_entry_price = parsed_event['ask_price'] # because it's an SL order, the ask price will be equal to its filled price
+                # actual_entry_price = parsed_event['ask_price'] # because it's an SL order, the ask price will be equal to its filled price
                 candle_data = db.getCandleData(parsed_event['order_id']) if env == 'prod' else db.getCandleData(2222)
                 group_id = int(candle_data['group_id'])
                 current_stop_loss, trailing_value, trailing_price, next_stoploss_price = calculateTrailingValue(candle_data,parsed_event['direction'])
