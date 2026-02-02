@@ -1,10 +1,11 @@
 import json 
 
-def calculateTrailingValue(candle_data, direction, actual_entry_price):
+def calculateTrailingValue(candle_data, direction):
 
     if direction == "LONG":
         last_low = float(json.loads(candle_data['candle_data'])['low'])
         trailing_percentage = float(json.loads(candle_data['trade_metadata'])['trailing_percentage'])
+        actual_entry_price = float(json.loads(candle_data['actual_entry_price']))
         trailing_value = (actual_entry_price - last_low) * trailing_percentage
         trailing_price = actual_entry_price + trailing_value
         next_stoploss_price = last_low + trailing_value 
@@ -12,6 +13,7 @@ def calculateTrailingValue(candle_data, direction, actual_entry_price):
     else:
         last_high = float(json.loads(candle_data['candle_data'])['high'])
         trailing_percentage = float(json.loads(candle_data['trade_metadata'])['trailing_percentage'])
+        actual_entry_price = float(json.loads(candle_data['actual_entry_price']))
         trailing_value = (last_high - actual_entry_price) * trailing_percentage
         trailing_price = actual_entry_price - trailing_value
         next_stoploss_price = last_high - trailing_value  
